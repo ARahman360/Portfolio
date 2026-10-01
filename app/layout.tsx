@@ -70,6 +70,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
     >
       <body className="min-h-screen bg-night text-ink">
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              'setTimeout(function(){if(!document.querySelector(".reveal.is-visible"))document.documentElement.classList.add("reveal-all");},2500);',
+          }}
+        />
         <a href="#main" className="skip-link">
           Skip to main content
         </a>

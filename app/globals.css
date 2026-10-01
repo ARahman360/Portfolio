@@ -216,6 +216,13 @@
   transform: none;
 }
 
+/* Safety net: if client scripts never run (e.g. a dev-server/HMR hiccup),
+   force content visible so the page is never left blank. */
+html.reveal-all .reveal {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 /* Skip link — hidden until keyboard-focused */
 .skip-link {
   position: fixed;
