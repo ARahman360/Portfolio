@@ -1,0 +1,295 @@
+@import "tailwindcss";
+
+/* =========================================================
+   Design tokens — premium dark navy / electric blue theme
+   ========================================================= */
+@theme {
+  /* Backgrounds */
+  --color-night: #04070e;
+  --color-night-soft: #070d18;
+  --color-surface: #0a1120;
+  --color-surface-raised: #0d1526;
+
+  /* Borders */
+  --color-line: #1a2540;
+  --color-line-strong: #253352;
+
+  /* Text */
+  --color-ink: #f2f6fc;
+  --color-ink-dim: #9db0cc;
+  --color-ink-faint: #64748f;
+
+  /* Accents */
+  --color-brand: #2f81f7;
+  --color-brand-bright: #4da3ff;
+  --color-accent: #67e8f9;
+
+  /* Fonts — the actual font files come from next/font (see app/layout.tsx) */
+  --font-sans: var(--font-body, ui-sans-serif, system-ui, sans-serif);
+  --font-display: var(--font-heading, ui-sans-serif, system-ui, sans-serif);
+  --font-mono: var(--font-mono-face, ui-monospace, SFMono-Regular, Menlo, monospace);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-night);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Headings use the display font everywhere */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+  }
+
+  ::selection {
+    background-color: rgb(47 129 247 / 0.35);
+    color: #fff;
+  }
+
+  /* One consistent keyboard focus style across the site */
+  :focus-visible {
+    outline: 2px solid var(--color-brand-bright);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  /* Page gutter — used by every section */
+  .shell {
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .shell {
+      padding-inline: 2rem;
+    }
+  }
+
+  /* Premium card surface with a soft blue glow on hover */
+  .card {
+    background: linear-gradient(180deg, rgb(13 21 38 / 0.9), rgb(9 15 29 / 0.75));
+    border: 1px solid rgb(148 163 184 / 0.12);
+    border-radius: 1rem;
+    transition:
+      border-color 0.3s ease,
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .card-hover:hover {
+    border-color: rgb(47 129 247 / 0.45);
+    transform: translateY(-4px);
+    box-shadow:
+      0 18px 40px -24px rgb(47 129 247 / 0.55),
+      0 0 0 1px rgb(47 129 247 / 0.08);
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1;
+    padding: 0.8rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: linear-gradient(180deg, #3b8dff, #2f81f7);
+    color: #fff;
+    box-shadow: 0 10px 30px -12px rgb(47 129 247 / 0.8);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.07);
+    box-shadow: 0 16px 34px -12px rgb(47 129 247 / 0.9);
+  }
+
+  .btn-ghost {
+    border: 1px solid rgb(148 163 184 / 0.22);
+    background: rgb(10 17 32 / 0.6);
+    color: var(--color-ink);
+  }
+
+  .btn-ghost:hover {
+    border-color: rgb(47 129 247 / 0.5);
+    background: rgb(47 129 247 / 0.08);
+    transform: translateY(-2px);
+  }
+
+  /* Clearly disabled action (e.g. a project link that has no URL yet) */
+  .btn-disabled {
+    border: 1px dashed rgb(148 163 184 / 0.28);
+    background: transparent;
+    color: var(--color-ink-faint);
+    cursor: not-allowed;
+  }
+
+  /* Form fields */
+  .field {
+    width: 100%;
+    border-radius: 0.75rem;
+    border: 1px solid rgb(148 163 184 / 0.16);
+    background: rgb(7 12 23 / 0.8);
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    color: var(--color-ink);
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .field::placeholder {
+    color: var(--color-ink-faint);
+  }
+
+  .field:focus {
+    outline: none;
+    border-color: rgb(47 129 247 / 0.7);
+    box-shadow: 0 0 0 3px rgb(47 129 247 / 0.18);
+  }
+
+  .field[aria-invalid="true"] {
+    border-color: rgb(248 113 113 / 0.6);
+  }
+}
+
+/* =========================================================
+   Small utilities that would be noisy as Tailwind classes
+   ========================================================= */
+
+/* Blue → cyan gradient text (hero name, monogram) */
+.text-gradient {
+  background-image: linear-gradient(100deg, var(--color-brand-bright) 10%, var(--color-accent) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Faint technical grid used behind hero / visuals */
+.grid-bg {
+  background-image:
+    linear-gradient(to right, rgb(148 163 184 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(148 163 184 / 0.06) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+/* Single subtle blue glow for the hero (kept intentionally gentle) */
+.hero-glow {
+  background: radial-gradient(closest-side, rgb(47 129 247 / 0.22), rgb(47 129 247 / 0) 70%);
+  filter: blur(10px);
+}
+
+/* Scroll-reveal animation (see components/Reveal.tsx) */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Skip link — hidden until keyboard-focused */
+.skip-link {
+  position: fixed;
+  top: -4rem;
+  left: 1rem;
+  z-index: 100;
+  border-radius: 9999px;
+  background: var(--color-brand);
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.875rem;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-menu-in {
+  animation: menu-in 0.22s ease-out both;
+}
+
+/* Subtle scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-night);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1c2942;
+  border-radius: 8px;
+  border: 2px solid var(--color-night);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2a3b5e;
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .btn-primary:hover,
+  .btn-ghost:hover,
+  .card-hover:hover {
+    transform: none;
+  }
+}
