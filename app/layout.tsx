@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, JetBrains_Mono } from "next/font/google";
 import type { ReactNode } from "react";
-import CursorFollower from "@/components/CursorFollower";
 import DockNav from "@/components/DockNav";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
@@ -94,7 +93,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <a href="#main" className="skip-link">
           Skip to main content
         </a>
-        <CursorFollower />
         <Navbar />
         {children}
         <Footer />
