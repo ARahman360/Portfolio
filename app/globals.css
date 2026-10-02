@@ -303,6 +303,99 @@
 }
 
 /* ---------------------------------------------------------
+   Career Journey timeline (components/Experience.tsx)
+   A light pulse travels down the rail and each node breathes,
+   matching the motion in the reference template.
+--------------------------------------------------------- */
+@keyframes rail-flow {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 0% 200%;
+  }
+}
+
+.timeline-rail {
+  background-image: linear-gradient(
+    to bottom,
+    rgb(56 189 248 / 0.9) 0%,
+    rgb(139 92 246 / 0.9) 35%,
+    rgb(139 92 246 / 0.55) 65%,
+    rgb(139 92 246 / 0) 100%
+  );
+  background-size: 100% 200%;
+  animation: rail-flow 4.5s linear infinite;
+}
+
+/* Bright comet that slides down the rail */
+.timeline-rail::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 22%;
+  border-radius: 9999px;
+  background: linear-gradient(
+    to bottom,
+    rgb(255 255 255 / 0) 0%,
+    rgb(255 255 255 / 0.9) 50%,
+    rgb(255 255 255 / 0) 100%
+  );
+  filter: blur(1px);
+  animation: rail-comet 4.5s linear infinite;
+}
+
+@keyframes rail-comet {
+  0% {
+    transform: translateY(-120%);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(560%);
+    opacity: 0;
+  }
+}
+
+/* Breathing halo behind each timeline node */
+@keyframes node-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+
+.timeline-node::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgb(139 92 246 / 0.75) 0%, rgb(139 92 246 / 0) 70%);
+  animation: node-pulse 2.6s ease-out infinite;
+}
+
+.timeline-node::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgb(56 189 248 / 0.75) 0%, rgb(56 189 248 / 0) 70%);
+  animation: node-pulse 2.6s ease-out infinite;
+  animation-delay: 1.3s;
+}
+
+/* ---------------------------------------------------------
    Hanging ID badge (components/ProfileVisual.tsx)
    The badge sways like a real lanyard card, pivoting from the
    top of the strap.
@@ -448,6 +541,13 @@ html.reveal-all .reveal {
   .badge-sway {
     animation: none !important;
     transform: none !important;
+  }
+
+  .timeline-rail,
+  .timeline-rail::after,
+  .timeline-node::before,
+  .timeline-node::after {
+    animation: none !important;
   }
 
   .reveal {

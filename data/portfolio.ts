@@ -1,17 +1,16 @@
 import {
   Briefcase,
   Building2,
-  ChefHat,
   Code,
   Coffee,
   Cpu,
+  Database,
   GraduationCap,
   House,
   Mail,
   Network,
   ShieldCheck,
   Sparkles,
-  Store,
   Terminal,
   User,
   Workflow,
@@ -146,20 +145,6 @@ export interface ExperienceEntry {
 
 export const experiences: ExperienceEntry[] = [
   {
-    icon: ChefHat,
-    title: "Kitchen Work",
-    period: "Work experience",
-    description:
-      "Worked in a fast-paced kitchen environment where teamwork, hygiene, cleanliness and time management were important. The experience helped me develop responsibility, efficiency and teamwork skills.",
-  },
-  {
-    icon: Store,
-    title: "Supermarket Experience",
-    period: "Work experience",
-    description:
-      "Worked in a retail environment and gained experience in organization, cleanliness, customer service and working efficiently in a busy workplace.",
-  },
-  {
     icon: Workflow,
     title: "PLC Programming Course Project",
     organization: "Industrial automation coursework",
@@ -189,10 +174,66 @@ export const experiences: ExperienceEntry[] = [
     tags: ["Python", "Pandas", "Automation", "Data handling"],
     sample: true,
   },
+  {
+    icon: Cpu,
+    title: "IoT Sensor Monitoring Dashboard",
+    organization: "Personal project",
+    period: "Self-directed",
+    description:
+      "Streamed temperature and vibration readings from simulated sensors into a live web dashboard, with threshold alerts when a machine drifted outside its safe operating range.",
+    tags: ["MQTT", "ESP32", "Node.js", "Dashboards"],
+    sample: true,
+  },
+  {
+    icon: ShieldCheck,
+    title: "Network Security Fundamentals",
+    organization: "Cybersecurity coursework",
+    period: "Academic project",
+    description:
+      "Studied and applied the basics of securing a small network: firewall rules, VPN access, password policies and basic traffic analysis to spot suspicious behaviour.",
+    tags: ["Firewalls", "VPN", "Packet analysis", "Access control"],
+    sample: true,
+  },
+  {
+    icon: Database,
+    title: "Relational Database Design",
+    organization: "Software development coursework",
+    period: "Academic project",
+    description:
+      "Designed and queried a normalised relational database for production records, writing joins, aggregate reports and the schema behind a small inventory application.",
+    tags: ["SQL", "PostgreSQL", "Schema design", "Reporting"],
+    sample: true,
+  },
+  {
+    icon: Terminal,
+    title: "Linux Systems Practice",
+    organization: "Operating systems coursework",
+    period: "Academic project",
+    description:
+      "Worked through command-line fundamentals on Linux: file permissions, process and service management, shell scripting and log inspection for everyday system administration tasks.",
+    tags: ["Linux", "Bash", "Permissions", "System admin"],
+    sample: true,
+  },
+  {
+    icon: Coffee,
+    title: "Java Application Exercises",
+    organization: "Programming coursework",
+    period: "Academic project",
+    description:
+      "Built console and object-oriented Java exercises covering classes, collections, file handling and exception handling, which built the base for my later automation work.",
+    tags: ["Java", "OOP", "Collections", "File I/O"],
+    sample: true,
+  },
 ];
 
 /** Real (non-sample) roles — used for the badge's experience count. */
 export const realExperienceCount = experiences.filter((item) => !item.sample).length;
+
+/** Short badge summary: real roles if any, otherwise the project count. */
+export const experienceSummary =
+  realExperienceCount > 0
+    ? `${realExperienceCount} work roles`
+    : `${experiences.length} projects`;
 
 export interface Area {
   icon: LucideIcon;

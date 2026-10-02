@@ -19,7 +19,7 @@ export default function Experience({ className = "" }: ExperienceProps) {
         {/* Centered glowing rail (desktop); left rail on mobile */}
         <span
           aria-hidden="true"
-          className="absolute top-3 bottom-3 left-[1.125rem] w-[3px] -translate-x-1/2 rounded-full bg-gradient-to-b from-sky-400 via-violet-500 to-transparent shadow-[0_0_14px_rgb(139_92_246/0.7)] md:left-1/2"
+          className="timeline-rail absolute top-3 bottom-3 left-[1.125rem] w-[3px] -translate-x-1/2 rounded-full shadow-[0_0_14px_rgb(139_92_246/0.7)] md:left-1/2"
         />
 
         {experiences.map(({ icon: Icon, title, organization, period, description, tags, sample }, index) => {
@@ -34,7 +34,7 @@ export default function Experience({ className = "" }: ExperienceProps) {
                   against the <li> rather than the reveal wrapper's transform. */}
               <span
                 aria-hidden="true"
-                className="absolute top-2 left-[1.125rem] grid size-9 -translate-x-1/2 place-items-center rounded-full bg-bg md:top-6 md:left-1/2"
+                className="timeline-node absolute top-2 left-[1.125rem] grid size-9 -translate-x-1/2 place-items-center rounded-full bg-bg md:top-6 md:left-1/2"
               >
                 <span className="absolute inset-0 rounded-full bg-gradient-to-br from-sky-400 to-violet-500 shadow-[0_0_18px_rgb(139_92_246/0.85)]" />
                 <span className="relative size-3 rounded-full border-2 border-bg bg-white" />
