@@ -1,6 +1,7 @@
-import { Briefcase, Compass, Braces, Rocket } from "lucide-react";
+import { Compass, Braces, Rocket, Route } from "lucide-react";
 import Reveal from "./Reveal";
-import { exploring, experiences } from "@/data/portfolio";
+import { exploring } from "@/data/portfolio";
+import { careerEntries } from "@/data/career";
 import { skillCategories } from "@/data/skills";
 import { projects } from "@/data/projects";
 
@@ -11,7 +12,7 @@ const stats = [
   { value: projects.length, label: "Projects showcased", icon: Rocket },
   { value: skillCount, label: "Technical skills", icon: Braces },
   { value: exploring.length, label: "Focus areas", icon: Compass },
-  { value: experiences.length, label: "Work experiences", icon: Briefcase },
+  { value: careerEntries.length, label: "Career journey areas", icon: Route },
 ];
 
 /** Big-number statistics band (Lightswind template signature). */

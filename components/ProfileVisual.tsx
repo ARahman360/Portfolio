@@ -3,7 +3,8 @@
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { MousePointer2 } from "lucide-react";
-import { experienceSummary, profile } from "@/data/portfolio";
+import { profile } from "@/data/portfolio";
+import { careerSummary } from "@/data/career";
 
 /* Decorative barcode bars — deterministic so server and client render alike. */
 const BAR_WIDTHS = [2, 1, 3, 1, 2, 4, 1, 1, 3, 2, 1, 4, 2, 1, 3, 1, 2, 2, 4, 1] as const;
@@ -143,9 +144,9 @@ export default function ProfileVisual() {
               </div>
               <div>
                 <dt className="font-mono text-[8px] tracking-[0.18em] text-ink-faint uppercase">
-                  Experience
+                  Focus
                 </dt>
-                <dd className="mt-0.5 text-[12px] leading-snug font-bold">{experienceSummary}</dd>
+                <dd className="mt-0.5 text-[12px] leading-snug font-bold">{careerSummary}</dd>
               </div>
               <div>
                 <dt className="font-mono text-[8px] tracking-[0.18em] text-ink-faint uppercase">
