@@ -5,6 +5,31 @@ import { useEffect, useRef } from "react";
 /* Eight tapered rays, rotated around the sun's core. */
 const RAY_ANGLES = [0, 45, 90, 135, 180, 225, 270, 315] as const;
 
+/*
+ * Moon craters. Each is drawn twice: a dark basin plus a slightly offset
+ * lighter ring on the upper-left, which reads as a lit crater rim.
+ */
+const CRATERS = [
+  { x: 10.4, y: 11.2, r: 2.6, o: 0.42 },
+  { x: 6.6, y: 17.4, r: 1.9, o: 0.38 },
+  { x: 12.6, y: 23.2, r: 2.2, o: 0.4 },
+  { x: 17.8, y: 9.4, r: 1.4, o: 0.32 },
+  { x: 20.6, y: 17.8, r: 1.7, o: 0.34 },
+  { x: 15.2, y: 18.6, r: 1.1, o: 0.3 },
+  { x: 8.2, y: 23.6, r: 1.2, o: 0.32 },
+  { x: 23.2, y: 12.4, r: 1, o: 0.3 },
+  { x: 19.4, y: 24.2, r: 1.3, o: 0.32 },
+  { x: 13.4, y: 6.6, r: 0.9, o: 0.26 },
+] as const;
+
+/* Dark basalt plains (the "seas") on the near side of the moon. */
+const MARIA = [
+  { x: 11.4, y: 13.2, rx: 4.4, ry: 3.6, rot: -22, o: 0.42 },
+  { x: 20.6, y: 15.4, rx: 3.2, ry: 4.1, rot: 14, o: 0.36 },
+  { x: 14.8, y: 21.4, rx: 4, ry: 2.7, rot: -8, o: 0.34 },
+  { x: 22.4, y: 21.6, rx: 2, ry: 1.7, rot: 20, o: 0.28 },
+] as const;
+
 /**
  * Theme cursor: a cratered crescent moon in light mode, a radiant sun in dark
  * mode. Both are centred exactly on the pointer — the wrapper's (0,0) origin
@@ -72,47 +97,58 @@ export default function CursorFollower() {
       <span className="cursor-halo" />
 
       <span className="cursor-icon">
-        {/* ---- Crescent moon (light mode) ---- */}
+        {/* ---- Full moon (light mode) ---- */}
         <svg className="cursor-moon" viewBox="0 0 32 32" width="26" height="26" fill="none">
           <defs>
-            <linearGradient id="cursorMoonFill" x1="6" y1="4" x2="26" y2="30" gradientUnits="userSpaceOnUse">
-              <stop stopColor="#ffffff" />
-              <stop offset="45%" stopColor="#e6edf7" />
-              <stop offset="100%" stopColor="#9fb0c7" />
-            </linearGradient>
-            {/* Carve the crescent: full disc minus an offset disc */}
-            <mask id="cursorMoonMask" maskUnits="userSpaceOnUse" x="0" y="0" width="32" height="32">
-              <circle cx="14.5" cy="16.5" r="12.6" fill="#fff" />
-              <circle cx="22.5" cy="11.5" r="11.2" fill="#000" />
-            </mask>
+            {/* Sphere shading: lit upper-left, shadowed lower-right limb */}
+            <radialGradient id="cursorMoonBody" cx="36%" cy="30%" r="80%">
+              <stop offset="0%" stopColor="#b9c5d6" />
+              <stop offset="45%" stopColor="#8b99ae" />
+              <stop offset="100%" stopColor="#525f75" />
+            </radialGradient>
+            {/* Limb darkening so the disc reads as a sphere */}
+            <radialGradient id="cursorMoonLimb" cx="40%" cy="34%" r="72%">
+              <stop offset="58%" stopColor="#0b1220" stopOpacity="0" />
+              <stop offset="100%" stopColor="#0b1220" stopOpacity="0.45" />
+            </radialGradient>
           </defs>
 
-          <g mask="url(#cursorMoonMask)">
-            <circle cx="14.5" cy="16.5" r="12.6" fill="url(#cursorMoonFill)" />
-            {/* Craters */}
-            <circle cx="10.2" cy="11.4" r="2.5" fill="#64748b" opacity="0.26" />
-            <circle cx="7.6" cy="18.6" r="1.8" fill="#64748b" opacity="0.22" />
-            <circle cx="12.4" cy="23.4" r="1.5" fill="#64748b" opacity="0.2" />
-            <circle cx="6.4" cy="24.6" r="1.1" fill="#64748b" opacity="0.18" />
-            <circle cx="13.6" cy="7.4" r="1.2" fill="#64748b" opacity="0.16" />
-            <circle cx="9.4" cy="28" r="0.9" fill="#64748b" opacity="0.15" />
-            {/* Bright inner-rim highlight along the terminator */}
-            <path
-              d="M22.6 4.4a12.6 12.6 0 0 0-6.4 23.4 12.6 12.6 0 0 1 6.4-23.4Z"
-              fill="#ffffff"
-              opacity="0.5"
-            />
-          </g>
+          {/* Base disc */}
+          <circle cx="16" cy="16" r="12.6" fill="url(#cursorMoonBody)" />
 
-          <circle
-            cx="14.5"
-            cy="16.5"
-            r="12.6"
-            stroke="#334155"
-            strokeOpacity="0.3"
-            strokeWidth="0.7"
-            mask="url(#cursorMoonMask)"
-          />
+          {/* Maria */}
+          {MARIA.map((m) => (
+            <ellipse
+              key={`${m.x}-${m.y}`}
+              cx={m.x}
+              cy={m.y}
+              rx={m.rx}
+              ry={m.ry}
+              fill="#4a5768"
+              opacity={m.o}
+              transform={`rotate(${m.rot} ${m.x} ${m.y})`}
+            />
+          ))}
+
+          {/* Craters with lit rims */}
+          {CRATERS.map((c) => (
+            <g key={`${c.x}-${c.y}`}>
+              <circle cx={c.x} cy={c.y} r={c.r} fill="#3d495c" opacity={c.o} />
+              <circle
+                cx={c.x - c.r * 0.16}
+                cy={c.y - c.r * 0.16}
+                r={c.r}
+                fill="none"
+                stroke="#f4f7fb"
+                strokeOpacity="0.6"
+                strokeWidth={Math.max(c.r * 0.22, 0.4)}
+              />
+            </g>
+          ))}
+
+          {/* Limb shading + outline */}
+          <circle cx="16" cy="16" r="12.6" fill="url(#cursorMoonLimb)" />
+          <circle cx="16" cy="16" r="12.6" stroke="#475569" strokeOpacity="0.4" strokeWidth="0.7" />
         </svg>
 
         {/* ---- Radiant sun (dark mode) ---- */}

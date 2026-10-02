@@ -489,10 +489,11 @@ html.has-custom-cursor .cursor-follower {
   display: none;
 }
 
-/* Moon glow (light mode) */
+/* Moon glow (light mode) — layered tightly so it reads on a white page */
 html.has-custom-cursor .cursor-moon {
-  filter: drop-shadow(0 0 3px rgb(147 197 253 / 0.95))
-    drop-shadow(0 0 9px rgb(96 165 250 / 0.6));
+  filter: drop-shadow(0 0 1.5px rgb(96 165 250 / 0.9))
+    drop-shadow(0 0 5px rgb(59 130 246 / 0.75))
+    drop-shadow(0 0 12px rgb(37 99 235 / 0.5));
 }
 
 /* Sun glow (dark mode) */
@@ -520,8 +521,9 @@ html.has-custom-cursor .cursor-follower.is-active .cursor-icon {
 }
 
 html.has-custom-cursor .cursor-follower.is-active .cursor-moon {
-  filter: drop-shadow(0 0 4px rgb(147 197 253 / 1))
-    drop-shadow(0 0 14px rgb(96 165 250 / 0.8));
+  filter: drop-shadow(0 0 2px rgb(96 165 250 / 1))
+    drop-shadow(0 0 8px rgb(59 130 246 / 0.85))
+    drop-shadow(0 0 18px rgb(37 99 235 / 0.6));
 }
 
 .dark .cursor-follower.is-active .cursor-sun {
