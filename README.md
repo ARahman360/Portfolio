@@ -52,6 +52,7 @@ components/
   ProfileVisual.tsx # Tiltable lanyard ID badge (portrait / AR monogram)
   TechMarquee.tsx   # Opposing skill-pill marquee rows
   StatsBand.tsx     # Big-number stats (derived from the data files)
+  CursorFollower.tsx# Glowing cursor dot (fine pointers only)
   About.tsx  Skills.tsx  Exploring.tsx
   Projects.tsx  ProjectCard.tsx
   Education.tsx
