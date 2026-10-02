@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
+import { useForm, ValidationError } from "@formspree/react";
 import { AlertCircle, Check, Loader2, Mail, MapPin, Send } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./BrandIcons";
 import Reveal from "./Reveal";
@@ -8,13 +9,13 @@ import SectionHeading from "./SectionHeading";
 import { linkedinHref, links, mailHref, profile } from "@/data/portfolio";
 
 /* ------------------------------------------------------------------
-   Contact form backend
-   The form works client-side only for now. To start receiving messages:
-   1. Create a form at https://formspree.io (or use Resend).
-   2. Paste your form URL into FORM_ENDPOINT below.
-   Until then the form validates input and shows an honest demo state.
+   Contact form delivery — Formspree (React integration)
+   Submissions are posted to the endpoint below via @formspree/react's useForm.
+   To use a different form, create one at https://formspree.io and update the
+   id below (the endpoint is derived from the same form URL).
 ------------------------------------------------------------------ */
-const FORM_ENDPOINT = "";
+const FORMSPREE_FORM_ID = "xnpnyevl";
+const FORM_ENDPOINT = `https://formspree.io/f/${FORMSPREE_FORM_ID}`;
 
 interface FormValues {
   name: string;
@@ -40,6 +41,15 @@ function validate(values: FormValues): FormErrors {
   return errors;
 }
 
+/* Formspree can return raw transport messages (e.g. "Failed to fetch");
+   show friendly copy for those, its honest server message for the rest. */
+function humanizeServerError(message: string): string {
+  if (/fetch|network|failed|unknown error/i.test(message)) {
+    return "Something went wrong while sending. Please try again or email me directly.";
+  }
+  return message;
+}
+
 interface ContactRowProps {
   icon: ReactNode;
   label: string;
@@ -59,8 +69,8 @@ function ContactRow({ icon, label, href, value, external = false }: ContactRowPr
   );
 
   return (
-    <li className="card flex items-center gap-3.5 px-4 py-3.5 transition-colors hover:border-brand/40">
-      <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-brand/20 bg-brand/10 text-brand-bright">
+    <li className="card flex items-center gap-3.5 px-4 py-3.5 transition-colors hover:border-primary/40">
+      <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
         {icon}
       </span>
       {href ? (
@@ -68,7 +78,7 @@ function ContactRow({ icon, label, href, value, external = false }: ContactRowPr
           href={href}
           target={external ? "_blank" : undefined}
           rel={external ? "noreferrer noopener" : undefined}
-          className="min-w-0 rounded-md transition-colors hover:text-brand-bright"
+          className="min-w-0 rounded-md transition-colors hover:text-primary"
         >
           {content}
         </a>
@@ -82,7 +92,19 @@ function ContactRow({ icon, label, href, value, external = false }: ContactRowPr
 export default function Contact() {
   const [values, setValues] = useState<FormValues>({ name: "", email: "", message: "" });
   const [errors, setErrors] = useState<FormErrors>({});
-  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
+  const [submission, submitMessage, resetSubmission] = useForm(FORMSPREE_FORM_ID);
+
+  const sending = submission.submitting;
+  const sent = submission.succeeded;
+
+  /* True when Formspree itself rejected a field (rendered via <ValidationError>). */
+  const hasServerFieldError = (field: string) =>
+    (submission.errors?.getFieldErrors(field).length ?? 0) > 0;
+
+  /* Form-level failure: our own message, or Formspree's (humanized). */
+  const serverFormError = submission.errors?.getFormErrors()[0];
+  const formError =
+    errors.form ?? (serverFormError ? humanizeServerError(serverFormError.message) : null);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
@@ -93,54 +115,45 @@ export default function Contact() {
       delete next[name as keyof FormValues];
       return next;
     });
+    /* Drop stale Formspree errors while the visitor edits. */
+    if (submission.errors) resetSubmission();
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     const found = validate(values);
     setErrors(found);
-    if (Object.keys(found).length > 0) return;
-
-    setStatus("sending");
-
-    try {
-      if (FORM_ENDPOINT) {
-        const response = await fetch(FORM_ENDPOINT, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify(values),
-        });
-        if (!response.ok) throw new Error("Request failed");
-      }
-      // No endpoint configured: fall through to the demo success state.
-      setStatus("sent");
-    } catch {
-      setErrors({ form: "Something went wrong. Please try again or email me directly." });
-      setStatus("idle");
+    if (Object.keys(found).length > 0) {
+      event.preventDefault();
+      return;
     }
+
+    void submitMessage(event).catch(() => {
+      resetSubmission();
+      setErrors({ form: "Something went wrong. Please try again or email me directly." });
+    });
   };
 
   const reset = () => {
+    resetSubmission();
     setValues({ name: "", email: "", message: "" });
     setErrors({});
-    setStatus("idle");
   };
 
   const githubHandle = links.github.replace(/^https?:\/\//, "");
 
   return (
-    <section id="contact" className="scroll-mt-24 border-t border-line/40 py-20 sm:py-24">
+    <section id="contact" className="scroll-mt-32 border-t border-line py-20 sm:py-24">
       <div className="shell">
-        <SectionHeading icon={Send} title="Let's Connect" />
+        <SectionHeading
+          title="Let's Connect"
+          subtitle={profile.contactIntro}
+        />
 
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
-          {/* Left — introduction and contact details */}
+          {/* Left — contact details */}
           <div className="lg:col-span-5">
             <Reveal>
-              <p className="max-w-xl text-[15px] leading-7 text-ink-dim">{profile.contactIntro}</p>
-
-              <ul className="mt-8 grid gap-3">
+              <ul className="grid gap-3">
                 {mailHref ? (
                   <ContactRow
                     icon={<Mail size={16} aria-hidden="true" />}
@@ -180,25 +193,30 @@ export default function Contact() {
           {/* Right — contact form */}
           <div className="lg:col-span-7">
             <Reveal delay={100}>
-              {status === "sent" ? (
+              {sent ? (
                 <div className="card p-6 text-center sm:p-8">
-                  <span className="mx-auto grid size-12 place-items-center rounded-full border border-brand/30 bg-brand/10 text-brand-bright">
+                  <span className="mx-auto grid size-12 place-items-center rounded-full border border-primary/30 bg-primary/10 text-primary">
                     <Check size={22} aria-hidden="true" />
                   </span>
                   <h3 className="mt-4 font-display text-lg font-semibold text-ink">
                     Thank you, {values.name.trim().split(" ")[0]}!
                   </h3>
                   <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-ink-dim">
-                    Your message passed validation. The form is not connected to a delivery
-                    service yet, so nothing was sent — once a backend (Formspree or Resend) is
-                    connected, messages will be delivered directly.
+                    Your message has been delivered to my inbox — thanks for reaching out. I read
+                    every message and will get back to you as soon as I can.
                   </p>
                   <button type="button" onClick={reset} className="btn btn-ghost mt-6">
                     Write another message
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} noValidate className="card p-6 sm:p-8">
+                <form
+                  action={FORM_ENDPOINT}
+                  method="POST"
+                  onSubmit={handleSubmit}
+                  noValidate
+                  className="card p-6 sm:p-8"
+                >
                   <h3 className="font-display text-lg font-semibold text-ink">Send a message</h3>
                   <p className="mt-1 text-sm text-ink-dim">
                     Internships, trainee roles or student projects — feel free to reach out.
@@ -218,14 +236,26 @@ export default function Contact() {
                         className="field"
                         value={values.name}
                         onChange={handleChange}
-                        aria-invalid={errors.name ? "true" : undefined}
-                        aria-describedby={errors.name ? "contact-name-error" : undefined}
+                        aria-invalid={
+                          errors.name || hasServerFieldError("name") ? "true" : undefined
+                        }
+                        aria-describedby={
+                          errors.name || hasServerFieldError("name")
+                            ? "contact-name-error"
+                            : undefined
+                        }
                       />
-                      {errors.name ? (
-                        <p id="contact-name-error" className="mt-1.5 text-xs text-red-400">
+                      {errors.name && !hasServerFieldError("name") ? (
+                        <p id="contact-name-error" className="mt-1.5 text-xs text-red-500 dark:text-red-400">
                           {errors.name}
                         </p>
                       ) : null}
+                      <ValidationError
+                        field="name"
+                        errors={submission.errors}
+                        id="contact-name-error"
+                        className="mt-1.5 text-xs text-red-500 dark:text-red-400"
+                      />
                     </div>
 
                     <div>
@@ -241,14 +271,26 @@ export default function Contact() {
                         className="field"
                         value={values.email}
                         onChange={handleChange}
-                        aria-invalid={errors.email ? "true" : undefined}
-                        aria-describedby={errors.email ? "contact-email-error" : undefined}
+                        aria-invalid={
+                          errors.email || hasServerFieldError("email") ? "true" : undefined
+                        }
+                        aria-describedby={
+                          errors.email || hasServerFieldError("email")
+                            ? "contact-email-error"
+                            : undefined
+                        }
                       />
-                      {errors.email ? (
-                        <p id="contact-email-error" className="mt-1.5 text-xs text-red-400">
+                      {errors.email && !hasServerFieldError("email") ? (
+                        <p id="contact-email-error" className="mt-1.5 text-xs text-red-500 dark:text-red-400">
                           {errors.email}
                         </p>
                       ) : null}
+                      <ValidationError
+                        field="email"
+                        errors={submission.errors}
+                        id="contact-email-error"
+                        className="mt-1.5 text-xs text-red-500 dark:text-red-400"
+                      />
                     </div>
 
                     <div>
@@ -263,33 +305,45 @@ export default function Contact() {
                         className="field resize-y"
                         value={values.message}
                         onChange={handleChange}
-                        aria-invalid={errors.message ? "true" : undefined}
-                        aria-describedby={errors.message ? "contact-message-error" : undefined}
+                        aria-invalid={
+                          errors.message || hasServerFieldError("message") ? "true" : undefined
+                        }
+                        aria-describedby={
+                          errors.message || hasServerFieldError("message")
+                            ? "contact-message-error"
+                            : undefined
+                        }
                       />
-                      {errors.message ? (
-                        <p id="contact-message-error" className="mt-1.5 text-xs text-red-400">
+                      {errors.message && !hasServerFieldError("message") ? (
+                        <p id="contact-message-error" className="mt-1.5 text-xs text-red-500 dark:text-red-400">
                           {errors.message}
                         </p>
                       ) : null}
+                      <ValidationError
+                        field="message"
+                        errors={submission.errors}
+                        id="contact-message-error"
+                        className="mt-1.5 text-xs text-red-500 dark:text-red-400"
+                      />
                     </div>
                   </div>
 
-                  {errors.form ? (
+                  {formError ? (
                     <p
                       role="alert"
-                      className="mt-4 flex items-center gap-2 rounded-lg border border-red-400/30 bg-red-400/10 px-4 py-3 text-sm text-red-300"
+                      className="mt-4 flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400"
                     >
                       <AlertCircle size={15} aria-hidden="true" />
-                      {errors.form}
+                      {formError}
                     </p>
                   ) : null}
 
                   <button
                     type="submit"
-                    disabled={status === "sending"}
+                    disabled={sending}
                     className="btn btn-primary mt-6 w-full disabled:cursor-wait disabled:opacity-70"
                   >
-                    {status === "sending" ? (
+                    {sending ? (
                       <>
                         <Loader2 size={16} className="animate-spin" aria-hidden="true" />
                         Sending...

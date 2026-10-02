@@ -3,11 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronRight, Download, Menu, X } from "lucide-react";
 import SocialLinks from "./SocialLinks";
+import ThemeToggle from "./ThemeToggle";
 import { links, navLinks, profile } from "@/data/portfolio";
 
 /**
- * Fixed navigation bar with scroll-spy, smooth scrolling and a
- * mobile hamburger menu.
+ * Floating glass pill navigation with scroll-spy, smooth scrolling and a
+ * mobile menu — styled after the Lightswind portfolio template.
  */
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -75,81 +76,100 @@ export default function Navbar() {
   };
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ${
-        scrolled || open
-          ? "border-line/70 bg-night/85 backdrop-blur-xl"
-          : "border-transparent bg-night/40 backdrop-blur-md"
-      }`}
-    >
-      <div className="shell flex h-16 items-center justify-between gap-4 sm:h-[72px]">
-        {/* Monogram */}
-        <a
-          href="#home"
-          onClick={() => handleNavClick("home")}
-          className="shrink-0 font-display text-xl font-bold tracking-tight"
-          aria-label={`${profile.name} — home`}
-        >
-          {profile.monogram}
-          <span className="text-accent">.</span>
-        </a>
-
-        {/* Desktop navigation */}
-        <nav aria-label="Primary" className="hidden lg:block">
-          <ul className="flex items-center gap-0.5">
-            {navLinks.map((item) => {
-              const isActive = active === item.id;
-              return (
-                <li key={item.id}>
-                  <a
-                    href={`#${item.id}`}
-                    onClick={() => handleNavClick(item.id)}
-                    aria-current={isActive ? "true" : undefined}
-                    className={`relative block px-3 py-2 text-sm transition-colors ${
-                      isActive ? "text-brand-bright" : "text-ink-dim hover:text-ink"
-                    }`}
-                  >
-                    {item.label}
-                    <span
-                      className={`absolute inset-x-3 -bottom-0.5 h-px bg-brand-bright transition-transform duration-300 ${
-                        isActive ? "scale-x-100" : "scale-x-0"
-                      }`}
-                      aria-hidden="true"
-                    />
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-
-        {/* Actions */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          <SocialLinks className="hidden sm:flex" />
-          <a href={links.cv} download className="btn btn-ghost hidden px-4 py-2.5 text-sm md:inline-flex">
-            <Download size={15} aria-hidden="true" />
-            Download CV
-          </a>
-          <button
-            type="button"
-            onClick={() => setOpen((value) => !value)}
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-            aria-label={open ? "Close menu" : "Open menu"}
-            className="grid size-10 place-items-center rounded-lg border border-line/70 bg-surface/60 text-ink-dim transition hover:border-brand/50 hover:text-ink lg:hidden"
+    <header className="fixed inset-x-0 top-4 z-50 flex flex-col items-center px-4">
+      {/* Floating glass pill */}
+      <div
+        className={`glass w-full max-w-7xl rounded-[2rem] px-5 py-3 transition-shadow duration-300 sm:px-6 ${
+          scrolled || open ? "shadow-2xl" : "shadow-xl"
+        }`}
+      >
+        <div className="flex items-center justify-between gap-4">
+          {/* Logo — gradient monogram tile + stacked wordmark */}
+          <a
+            href="#home"
+            onClick={() => handleNavClick("home")}
+            className="group flex shrink-0 items-center gap-3 select-none"
+            aria-label={`${profile.name} — home`}
           >
-            {open ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
-          </button>
+            <span className="gradient-ring grid size-9 place-items-center rounded-xl p-px shadow-lg transition-transform duration-300 group-hover:scale-105">
+              <span className="grid size-full place-items-center rounded-[11px] bg-bg">
+                <span className="bg-gradient-to-r from-violet-500 to-sky-400 bg-clip-text text-xs font-extrabold tracking-tighter text-transparent">
+                  {profile.monogram}
+                </span>
+              </span>
+            </span>
+            <span className="flex flex-col text-left">
+              <span className="text-sm leading-none font-extrabold tracking-tight transition-colors group-hover:text-primary">
+                {profile.name}
+              </span>
+              <span className="mt-1 text-[9px] font-bold tracking-widest text-ink-dim uppercase">
+                Portfolio
+              </span>
+            </span>
+          </a>
+
+          {/* Desktop navigation */}
+          <nav aria-label="Primary" className="hidden lg:block">
+            <ul className="flex space-x-4 xl:space-x-6">
+              {navLinks.map((item) => {
+                const isActive = active === item.id;
+                return (
+                  <li key={item.id} className="group relative">
+                    <a
+                      href={`#${item.id}`}
+                      onClick={() => handleNavClick(item.id)}
+                      aria-current={isActive ? "true" : undefined}
+                      className={`block py-2 text-sm font-medium transition-colors ${
+                        isActive ? "text-primary" : "text-ink-dim hover:text-ink"
+                      }`}
+                    >
+                      {item.label}
+                      <span
+                        className={`absolute -bottom-0.5 left-1/2 h-0.5 -translate-x-1/2 rounded-full bg-primary/80 shadow-[0_0_8px_rgba(139,92,246,0.8)] transition-all duration-300 ${
+                          isActive ? "w-6" : "w-0 group-hover:w-6"
+                        }`}
+                        aria-hidden="true"
+                      />
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+
+          {/* Actions */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <SocialLinks className="hidden sm:flex" />
+            <a
+              href={links.cv}
+              download
+              className="btn btn-ghost hidden px-5 py-2.5 text-sm md:inline-flex"
+            >
+              <Download size={15} aria-hidden="true" />
+              Resume
+            </a>
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={() => setOpen((value) => !value)}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+              aria-label={open ? "Close menu" : "Open menu"}
+              className="grid size-10 shrink-0 place-items-center rounded-full border border-line bg-card/60 text-ink-dim transition-all duration-200 hover:border-primary/50 hover:text-primary lg:hidden"
+            >
+              {open ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu — glass panel below the pill */}
       {open && (
         <div
           id="mobile-menu"
-          className="animate-menu-in border-t border-line/60 bg-night/95 backdrop-blur-xl lg:hidden"
+          className="animate-menu-in glass mt-2 w-full max-w-7xl rounded-3xl p-4 shadow-xl lg:hidden"
         >
-          <nav aria-label="Mobile" className="shell py-4">
+          <nav aria-label="Mobile">
             <ul className="grid gap-1">
               {navLinks.map((item) => {
                 const isActive = active === item.id;
@@ -159,10 +179,10 @@ export default function Navbar() {
                       href={`#${item.id}`}
                       onClick={() => handleNavClick(item.id)}
                       aria-current={isActive ? "true" : undefined}
-                      className={`flex items-center justify-between rounded-lg px-3 py-2.5 text-[15px] transition-colors ${
+                      className={`flex items-center justify-between rounded-xl px-4 py-2.5 text-[15px] font-medium transition-colors ${
                         isActive
-                          ? "bg-brand/10 text-brand-bright"
-                          : "text-ink-dim hover:bg-surface hover:text-ink"
+                          ? "bg-primary/10 text-primary"
+                          : "text-ink-dim hover:bg-bg-soft hover:text-ink"
                       }`}
                     >
                       {item.label}
@@ -172,11 +192,11 @@ export default function Navbar() {
                 );
               })}
             </ul>
-            <div className="mt-4 flex items-center justify-between gap-3 border-t border-line/60 pt-4">
+            <div className="mt-3 flex items-center justify-between gap-3 border-t border-line pt-4">
               <SocialLinks />
               <a href={links.cv} download className="btn btn-primary px-4 py-2.5 text-xs">
                 <Download size={14} aria-hidden="true" />
-                Download CV
+                Resume
               </a>
             </div>
           </nav>

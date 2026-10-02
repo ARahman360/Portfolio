@@ -1,13 +1,19 @@
 import {
+  Briefcase,
+  Building2,
   ChefHat,
   Code,
   Coffee,
   Cpu,
+  GraduationCap,
+  House,
+  Mail,
   Network,
   ShieldCheck,
   Sparkles,
   Store,
   Terminal,
+  User,
   Workflow,
   type LucideIcon,
 } from "lucide-react";
@@ -22,8 +28,8 @@ export const links = {
   linkedin: "PLACEHOLDER",
   email: "PLACEHOLDER",
   cv: "/Md_Abdur_Rahman_CV.pdf",
-  // Replace with your real domain before going live (used for Open Graph URLs).
-  siteUrl: "https://example.com",
+  // Real domain — used for Open Graph / canonical URLs in app/layout.tsx.
+  siteUrl: "https://mdabdurrahman.vercel.app",
 };
 
 export const profile = {
@@ -34,6 +40,10 @@ export const profile = {
   university: "LAB University of Applied Sciences",
   degree: "Industrial Information Technology",
   location: "Finland",
+  /** Short field label used on the hero ID badge. */
+  specialty: "Industrial IT & Automation",
+  /** Decorative badge serial printed at the bottom of the hero ID card. */
+  badgeId: "LAB-IIT-2026",
   heroDescription:
     "I am an Industrial Information Technology student at LAB University of Applied Sciences in Finland. I am interested in software development, industrial automation, PLC systems, networking and modern digital technologies.",
   about: [
@@ -60,16 +70,18 @@ export const linkedinHref: string | null = isPlaceholder(links.linkedin)
 export interface NavLink {
   id: string;
   label: string;
+  /** Icon used by the floating dock navigation. */
+  icon: LucideIcon;
 }
 
 export const navLinks: NavLink[] = [
-  { id: "home", label: "Home" },
-  { id: "about", label: "About" },
-  { id: "skills", label: "Skills" },
-  { id: "projects", label: "Projects" },
-  { id: "education", label: "Education" },
-  { id: "experience", label: "Experience" },
-  { id: "contact", label: "Contact" },
+  { id: "home", label: "Home", icon: House },
+  { id: "about", label: "About", icon: User },
+  { id: "skills", label: "Skills", icon: Code },
+  { id: "projects", label: "Projects", icon: Briefcase },
+  { id: "education", label: "Education", icon: GraduationCap },
+  { id: "experience", label: "Experience", icon: Building2 },
+  { id: "contact", label: "Contact", icon: Mail },
 ];
 
 export interface Tag {

@@ -1,33 +1,71 @@
 @import "tailwindcss";
 
 /* =========================================================
-   Design tokens — premium dark navy / electric blue theme
+   Design tokens — Lightswind-inspired light theme with a
+   dark-mode toggle (class strategy: <html class="dark">).
+   Light values live in @theme (the default), dark values
+   override the same variables under .dark.
    ========================================================= */
 @theme {
   /* Backgrounds */
-  --color-night: #04070e;
-  --color-night-soft: #070d18;
-  --color-surface: #0a1120;
-  --color-surface-raised: #0d1526;
+  --color-bg: #ffffff;
+  --color-bg-soft: #f7f7f8;
+  --color-card: #ffffff;
 
   /* Borders */
-  --color-line: #1a2540;
-  --color-line-strong: #253352;
+  --color-line: rgb(0 0 0 / 0.09);
+  --color-line-strong: rgb(0 0 0 / 0.16);
 
   /* Text */
-  --color-ink: #f2f6fc;
-  --color-ink-dim: #9db0cc;
-  --color-ink-faint: #64748f;
+  --color-ink: #0a0a0a;
+  --color-ink-dim: #737373;
+  --color-ink-faint: #9ca3af;
 
   /* Accents */
-  --color-brand: #2f81f7;
-  --color-brand-bright: #4da3ff;
-  --color-accent: #67e8f9;
+  --color-primary: #8b5cf6;
+  --color-primary-bright: #7c3aed;
+  --color-sky: #0ea5e9;
+  --color-success: #34d399;
 
-  /* Fonts — the actual font files come from next/font (see app/layout.tsx) */
+  /* Fonts — font files come from next/font (see app/layout.tsx) */
   --font-sans: var(--font-body, ui-sans-serif, system-ui, sans-serif);
   --font-display: var(--font-heading, ui-sans-serif, system-ui, sans-serif);
   --font-mono: var(--font-mono-face, ui-monospace, SFMono-Regular, Menlo, monospace);
+}
+
+/* Non-utility helpers (not exposed as Tailwind colors) */
+:root {
+  --glass-bg: rgb(255 255 255 / 0.72);
+  --glass-bg-strong: rgb(255 255 255 / 0.88);
+  --orb-a: rgb(139 92 246 / 0.32); /* violet glow */
+  --orb-b: rgb(56 189 248 / 0.26); /* sky glow */
+  --dot-grid: rgb(0 0 0 / 0.1);
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04);
+  color-scheme: light;
+}
+
+.dark {
+  --color-bg: #09090b;
+  --color-bg-soft: #101013;
+  --color-card: rgb(24 24 27 / 0.72);
+
+  --color-line: rgb(255 255 255 / 0.1);
+  --color-line-strong: rgb(255 255 255 / 0.2);
+
+  --color-ink: #fafafa;
+  --color-ink-dim: #a1a1aa;
+  --color-ink-faint: #71717a;
+
+  --color-primary: #8b5cf6;
+  --color-primary-bright: #a78bfa;
+
+  --glass-bg: rgb(24 24 27 / 0.66);
+  --glass-bg-strong: rgb(24 24 27 / 0.9);
+  --orb-a: rgb(124 58 237 / 0.38);
+  --orb-b: rgb(14 165 233 / 0.2);
+  --dot-grid: rgb(255 255 255 / 0.1);
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4);
+  color-scheme: dark;
 }
 
 @layer base {
@@ -37,7 +75,7 @@
   }
 
   body {
-    background-color: var(--color-night);
+    background-color: var(--color-bg);
     color: var(--color-ink);
     font-family: var(--font-sans);
     overflow-x: hidden;
@@ -53,13 +91,13 @@
   }
 
   ::selection {
-    background-color: rgb(47 129 247 / 0.35);
-    color: #fff;
+    background-color: rgb(139 92 246 / 0.3);
+    color: var(--color-ink);
   }
 
   /* One consistent keyboard focus style across the site */
   :focus-visible {
-    outline: 2px solid var(--color-brand-bright);
+    outline: 2px solid var(--color-primary);
     outline-offset: 3px;
     border-radius: 4px;
   }
@@ -80,11 +118,20 @@
     }
   }
 
-  /* Premium card surface with a soft blue glow on hover */
+  /* Frosted glass surface (navbar pill, footer, profile card) */
+  .glass {
+    background: var(--glass-bg);
+    /* via @apply so Tailwind emits both prefixed + standard declarations */
+    @apply backdrop-blur-2xl;
+    border: 1px solid var(--color-line);
+  }
+
+  /* Card surface with a soft violet glow on hover */
   .card {
-    background: linear-gradient(180deg, rgb(13 21 38 / 0.9), rgb(9 15 29 / 0.75));
-    border: 1px solid rgb(148 163 184 / 0.12);
-    border-radius: 1rem;
+    background: var(--color-card);
+    border: 1px solid var(--color-line);
+    border-radius: 1.25rem;
+    box-shadow: var(--shadow-card);
     transition:
       border-color 0.3s ease,
       transform 0.3s ease,
@@ -92,11 +139,11 @@
   }
 
   .card-hover:hover {
-    border-color: rgb(47 129 247 / 0.45);
+    border-color: rgb(139 92 246 / 0.4);
     transform: translateY(-4px);
     box-shadow:
-      0 18px 40px -24px rgb(47 129 247 / 0.55),
-      0 0 0 1px rgb(47 129 247 / 0.08);
+      0 24px 48px -28px rgb(139 92 246 / 0.55),
+      0 0 0 1px rgb(139 92 246 / 0.08);
   }
 
   /* Buttons */
@@ -107,41 +154,43 @@
     gap: 0.5rem;
     border-radius: 9999px;
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 1;
-    padding: 0.8rem 1.5rem;
+    padding: 0.8rem 1.6rem;
     cursor: pointer;
     transition: all 0.25s ease;
     white-space: nowrap;
   }
 
   .btn-primary {
-    background: linear-gradient(180deg, #3b8dff, #2f81f7);
+    background: linear-gradient(180deg, #9d6bff, var(--color-primary));
     color: #fff;
-    box-shadow: 0 10px 30px -12px rgb(47 129 247 / 0.8);
+    box-shadow: 0 0 20px rgb(139 92 246 / 0.35);
   }
 
   .btn-primary:hover {
     transform: translateY(-2px);
-    filter: brightness(1.07);
-    box-shadow: 0 16px 34px -12px rgb(47 129 247 / 0.9);
+    box-shadow:
+      0 0 30px rgb(139 92 246 / 0.5),
+      0 10px 24px -12px rgb(139 92 246 / 0.6);
   }
 
   .btn-ghost {
-    border: 1px solid rgb(148 163 184 / 0.22);
-    background: rgb(10 17 32 / 0.6);
+    border: 1px solid var(--color-line-strong);
+    background: var(--glass-bg);
     color: var(--color-ink);
+    @apply backdrop-blur-lg;
   }
 
   .btn-ghost:hover {
-    border-color: rgb(47 129 247 / 0.5);
-    background: rgb(47 129 247 / 0.08);
+    border-color: rgb(139 92 246 / 0.5);
+    background: rgb(139 92 246 / 0.1);
     transform: translateY(-2px);
   }
 
   /* Clearly disabled action (e.g. a project link that has no URL yet) */
   .btn-disabled {
-    border: 1px dashed rgb(148 163 184 / 0.28);
+    border: 1px dashed var(--color-line-strong);
     background: transparent;
     color: var(--color-ink-faint);
     cursor: not-allowed;
@@ -150,9 +199,9 @@
   /* Form fields */
   .field {
     width: 100%;
-    border-radius: 0.75rem;
-    border: 1px solid rgb(148 163 184 / 0.16);
-    background: rgb(7 12 23 / 0.8);
+    border-radius: 0.9rem;
+    border: 1px solid var(--color-line-strong);
+    background: var(--glass-bg-strong);
     padding: 0.75rem 1rem;
     font-size: 0.9rem;
     color: var(--color-ink);
@@ -167,12 +216,12 @@
 
   .field:focus {
     outline: none;
-    border-color: rgb(47 129 247 / 0.7);
-    box-shadow: 0 0 0 3px rgb(47 129 247 / 0.18);
+    border-color: rgb(139 92 246 / 0.7);
+    box-shadow: 0 0 0 3px rgb(139 92 246 / 0.18);
   }
 
   .field[aria-invalid="true"] {
-    border-color: rgb(248 113 113 / 0.6);
+    border-color: rgb(239 68 68 / 0.6);
   }
 }
 
@@ -180,29 +229,112 @@
    Small utilities that would be noisy as Tailwind classes
    ========================================================= */
 
-/* Blue → cyan gradient text (hero name, monogram) */
+/* Violet → sky → indigo gradient text (hero name, monogram) */
 .text-gradient {
-  background-image: linear-gradient(100deg, var(--color-brand-bright) 10%, var(--color-accent) 90%);
+  background-image: linear-gradient(
+    100deg,
+    #7c3aed 0%,
+    #0ea5e9 45%,
+    #9333ea 72%,
+    #4f46e5 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-/* Faint technical grid used behind hero / visuals */
-.grid-bg {
-  background-image:
-    linear-gradient(to right, rgb(148 163 184 / 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(148 163 184 / 0.06) 1px, transparent 1px);
-  background-size: 56px 56px;
+/* Dot-grid texture used behind hero / visuals */
+.dot-grid {
+  background-image: radial-gradient(var(--dot-grid) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
 }
 
-/* Single subtle blue glow for the hero (kept intentionally gentle) */
-.hero-glow {
-  background: radial-gradient(closest-side, rgb(47 129 247 / 0.22), rgb(47 129 247 / 0) 70%);
-  filter: blur(10px);
+/* Big blurred color orbs behind the hero */
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(110px);
+  pointer-events: none;
 }
 
-/* Scroll-reveal animation (see components/Reveal.tsx) */
+.orb-violet {
+  background: var(--orb-a);
+}
+
+.orb-sky {
+  background: var(--orb-b);
+}
+
+/* Gradient-bordered monogram tile (logo, avatars) */
+.gradient-ring {
+  background: linear-gradient(135deg, #7c3aed, #8b5cf6 45%, #0ea5e9);
+}
+
+/* ---------------------------------------------------------
+   Tech marquee (see components/TechMarquee.tsx)
+--------------------------------------------------------- */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--marquee-duration, 42s) linear infinite;
+}
+
+.marquee-track:hover,
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-track--reverse {
+  animation-direction: reverse;
+}
+
+.marquee-fade {
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+/* ---------------------------------------------------------
+   Custom glowing cursor (components/CursorFollower.tsx)
+   Only enabled on fine-pointer devices without reduced motion.
+--------------------------------------------------------- */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+
+.cursor-follower {
+  display: none;
+}
+
+html.has-custom-cursor .cursor-follower {
+  display: block;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  pointer-events: none;
+  will-change: transform;
+  color: var(--color-primary);
+  filter: drop-shadow(0 0 8px rgb(139 92 246 / 0.9));
+  transition: scale 0.18s ease;
+}
+
+html.has-custom-cursor .cursor-follower.is-active {
+  scale: 1.4;
+}
+
+/* ---------------------------------------------------------
+   Scroll-reveal animation (components/Reveal.tsx)
+--------------------------------------------------------- */
 .reveal {
   opacity: 0;
   transform: translateY(18px);
@@ -230,7 +362,7 @@ html.reveal-all .reveal {
   left: 1rem;
   z-index: 100;
   border-radius: 9999px;
-  background: var(--color-brand);
+  background: var(--color-primary);
   color: #fff;
   padding: 0.6rem 1.2rem;
   font-size: 0.875rem;
@@ -262,17 +394,17 @@ html.reveal-all .reveal {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-night);
+  background: var(--color-bg-soft);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1c2942;
+  background: var(--color-line-strong);
   border-radius: 8px;
-  border: 2px solid var(--color-night);
+  border: 2px solid var(--color-bg-soft);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2a3b5e;
+  background: var(--color-primary);
 }
 
 /* Respect users who prefer reduced motion */
@@ -287,6 +419,10 @@ html.reveal-all .reveal {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .marquee-track {
+    animation: none !important;
   }
 
   .reveal {

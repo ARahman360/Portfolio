@@ -54,21 +54,19 @@ export default function ProjectCard({ project, featured = false }: ProjectCardPr
     <article
       className={`card card-hover flex h-full flex-col overflow-hidden ${featured ? "lg:flex-row" : ""}`}
     >
-      {/* Media — an elegant placeholder shows when the image file is missing */}
+      {/* Media — an elegant gradient placeholder shows when the image file is missing */}
       <div
-        className={`relative aspect-video shrink-0 overflow-hidden border-b border-line/50 ${
-          featured
-            ? "lg:aspect-auto lg:w-1/2 lg:border-b-0 lg:border-r"
-            : ""
+        className={`relative aspect-video shrink-0 overflow-hidden border-b border-line ${
+          featured ? "lg:aspect-auto lg:w-1/2 lg:border-r lg:border-b-0" : ""
         }`}
       >
-        <div className="absolute inset-0 grid place-items-center bg-gradient-to-br from-[#0b1526] via-night-soft to-[#0d1a33] p-6">
-          <div className="grid-bg absolute inset-0 opacity-40" aria-hidden="true" />
+        <div className="absolute inset-0 grid place-items-center bg-gradient-to-br from-violet-500/20 via-sky-400/10 to-violet-500/5 p-6">
+          <div className="dot-grid absolute inset-0 opacity-60" aria-hidden="true" />
           <div className="relative max-w-[90%] text-center">
-            <span className="block break-words font-display text-base font-semibold text-ink-dim">
+            <span className="block break-words font-display text-base font-bold text-ink">
               {project.title}
             </span>
-            <span className="mt-2 block font-mono text-[10px] uppercase tracking-[0.3em] text-ink-faint">
+            <span className="mt-2 block font-mono text-[10px] tracking-[0.3em] text-ink-dim uppercase">
               Project image
             </span>
           </div>
@@ -92,12 +90,12 @@ export default function ProjectCard({ project, featured = false }: ProjectCardPr
       </div>
 
       {/* Content */}
-      <div className={`flex flex-1 flex-col ${featured ? "p-6 sm:p-8" : "p-5"}`}>
-        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand-bright">
+      <div className={`flex flex-1 flex-col ${featured ? "p-6 sm:p-8" : "p-5 sm:p-6"}`}>
+        <p className="font-mono text-[10px] tracking-[0.25em] text-primary uppercase">
           {project.subtitle}
         </p>
         <h3
-          className={`mt-2 font-display font-semibold leading-snug tracking-tight text-ink ${
+          className={`mt-2 font-display leading-snug font-extrabold tracking-tight text-ink ${
             featured ? "text-xl sm:text-2xl" : "text-lg"
           }`}
         >
@@ -116,7 +114,7 @@ export default function ProjectCard({ project, featured = false }: ProjectCardPr
           {project.technologies.map((tech) => (
             <li
               key={tech}
-              className="rounded-md border border-line/60 bg-night/50 px-2 py-1 font-mono text-[11px] text-ink-dim"
+              className="rounded-full border border-line bg-bg-soft px-2.5 py-1 text-[11px] font-medium text-ink-dim"
             >
               {tech}
             </li>
