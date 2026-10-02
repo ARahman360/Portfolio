@@ -9,16 +9,22 @@ export default function Projects() {
   const rest = projects.filter((project) => project !== featured);
 
   return (
-    <section id="projects" className="scroll-mt-32 border-t border-line py-20 sm:py-24">
+    /* The generous bottom padding keeps the floating dock (which only shows from
+       the lg breakpoint) from ever covering the last row of project cards. */
+    <section
+      id="projects"
+      className="scroll-mt-32 border-t border-line pt-20 pb-28 sm:pt-24 sm:pb-32 lg:pb-36"
+    >
       <div className="shell">
         <SectionHeading
           title="Featured Projects"
-          subtitle="A selection of university projects and platforms I have designed and built."
+          subtitle="Platforms and websites I am actively building and maintaining."
           action={
             <a
               href={allProjectsUrl}
               target="_blank"
-              rel="noreferrer noopener"
+              rel="noopener noreferrer"
+              aria-label="View all repositories on GitHub"
               className="btn btn-ghost px-5 py-2.5 text-sm"
             >
               View All Projects
@@ -34,8 +40,10 @@ export default function Projects() {
             </Reveal>
           ) : null}
 
+          {/* Two remaining projects fill the row evenly; with a different count
+              they still stack cleanly on md and below. */}
           {rest.map((project, index) => (
-            <Reveal key={project.id} delay={(index + 1) * 80} className="h-full lg:col-span-2">
+            <Reveal key={project.id} delay={(index + 1) * 80} className="h-full md:col-span-1 lg:col-span-3">
               <ProjectCard project={project} />
             </Reveal>
           ))}

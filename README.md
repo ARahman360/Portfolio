@@ -111,14 +111,17 @@ Rules:
 Drop images into `public/projects/` using these names (already referenced in `data/projects.ts`):
 
 ```
-public/projects/homefoods.jpg
-public/projects/plc-automation.jpg
-public/projects/java.jpg
-public/projects/python.jpg
+public/projects/homefoods.png
+public/projects/halali.png
+public/projects/portfolio.png
 ```
 
-If a file is missing, the card shows an elegant placeholder with the project title — so the
-site always looks finished. Images fade in automatically once the file exists.
+Each entry in `data/projects.ts` also has an `imageAlt` describing what the screenshot shows —
+update it when you replace an image.
+
+If a file is missing, the card shows a polished placeholder with the project icon and title, so
+the site always looks finished and never shows a broken image. Images fade in automatically once
+the file exists.
 
 ### 4. Add or edit projects
 

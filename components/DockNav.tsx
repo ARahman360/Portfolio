@@ -6,7 +6,8 @@ import { navLinks, profile } from "@/data/portfolio";
 /**
  * Floating icon dock (Lightswind template signature): a glass pill holding one
  * circular button per section. Hovering lifts an icon and reveals its label
- * tooltip above it. Hidden on small screens, where the navbar menu is used.
+ * tooltip above it. Hidden on small screens, where the navbar menu is used, and
+ * while the projects section is in view so it never covers project content.
  */
 export default function DockNav() {
   const [active, setActive] = useState("home");
@@ -51,12 +52,27 @@ export default function DockNav() {
     };
   }, []);
 
+  /*
+   * The dock floats over the content, so while the projects section is in view
+   * it would sit on top of the two side-by-side cards. It steps aside for that
+   * section only (it is never removed) and is marked inert while hidden so it
+   * stays out of the tab order and cannot intercept clicks.
+   */
+  const steppedAside = active === "projects";
+
   return (
     <nav
       aria-label="Section quick navigation"
       className="pointer-events-none fixed inset-x-0 bottom-6 z-40 hidden justify-center px-4 lg:flex"
     >
-      <ul className="glass pointer-events-auto flex items-end gap-1.5 rounded-full p-2.5 shadow-[0_24px_60px_-28px_rgb(0_0_0/0.45)]">
+      <ul
+        inert={steppedAside}
+        className={`glass flex items-end gap-1.5 rounded-full p-2.5 shadow-[0_24px_60px_-28px_rgb(0_0_0/0.45)] transition-[opacity,transform] duration-300 ease-out ${
+          steppedAside
+            ? "pointer-events-none translate-y-8 opacity-0"
+            : "pointer-events-auto translate-y-0 opacity-100"
+        }`}
+      >
         {navLinks.map(({ id, label, icon: Icon }) => {
           const isActive = active === id;
 
