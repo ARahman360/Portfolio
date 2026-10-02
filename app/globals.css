@@ -303,6 +303,26 @@
 }
 
 /* ---------------------------------------------------------
+   Hanging ID badge (components/ProfileVisual.tsx)
+   The badge sways like a real lanyard card, pivoting from the
+   top of the strap.
+--------------------------------------------------------- */
+@keyframes badge-sway {
+  0%,
+  100% {
+    transform: rotate(-1.6deg);
+  }
+  50% {
+    transform: rotate(1.6deg);
+  }
+}
+
+.badge-sway {
+  transform-origin: 50% 0%;
+  animation: badge-sway 6s ease-in-out infinite;
+}
+
+/* ---------------------------------------------------------
    Custom glowing cursor (components/CursorFollower.tsx)
    Only enabled on fine-pointer devices without reduced motion.
 --------------------------------------------------------- */
@@ -423,6 +443,11 @@ html.reveal-all .reveal {
 
   .marquee-track {
     animation: none !important;
+  }
+
+  .badge-sway {
+    animation: none !important;
+    transform: none !important;
   }
 
   .reveal {

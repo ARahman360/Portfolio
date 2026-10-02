@@ -6,15 +6,17 @@ interface SectionHeadingProps {
   subtitle?: string;
   /** Optional element on the right side of the heading (e.g. a button). */
   action?: ReactNode;
+  /** Extra classes on the wrapper (e.g. "text-center"). */
+  className?: string;
 }
 
 /**
  * Large extrabold section title with an optional subtitle and action —
  * the heading treatment used throughout the Lightswind template.
  */
-export default function SectionHeading({ title, subtitle, action }: SectionHeadingProps) {
+export default function SectionHeading({ title, subtitle, action, className = "" }: SectionHeadingProps) {
   return (
-    <div className="mb-10 flex flex-wrap items-end justify-between gap-4 sm:mb-12">
+    <div className={`mb-10 flex flex-wrap items-end justify-between gap-4 sm:mb-12 ${className}`}>
       <div>
         <h2 className="text-[clamp(1.9rem,3.2vw,3rem)] leading-[1.05] font-extrabold tracking-[-0.03em]">
           {title}

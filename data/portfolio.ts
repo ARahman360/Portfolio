@@ -129,23 +129,70 @@ export const education: EducationEntry[] = [
 export interface ExperienceEntry {
   icon: LucideIcon;
   title: string;
+  /** Employer / project context shown under the title. */
+  organization?: string;
+  /** Short period label shown above the title. */
+  period?: string;
   description: string;
+  /** Small technology chips shown under the description. */
+  tags?: string[];
+  /**
+   * Marks placeholder content that is not a real role. Sample entries are
+   * badged "Sample" in the UI — replace or delete them once you have
+   * real project or internship experience to show.
+   */
+  sample?: boolean;
 }
 
 export const experiences: ExperienceEntry[] = [
   {
     icon: ChefHat,
     title: "Kitchen Work",
+    period: "Work experience",
     description:
       "Worked in a fast-paced kitchen environment where teamwork, hygiene, cleanliness and time management were important. The experience helped me develop responsibility, efficiency and teamwork skills.",
   },
   {
     icon: Store,
     title: "Supermarket Experience",
+    period: "Work experience",
     description:
       "Worked in a retail environment and gained experience in organization, cleanliness, customer service and working efficiently in a busy workplace.",
   },
+  {
+    icon: Workflow,
+    title: "PLC Programming Course Project",
+    organization: "Industrial automation coursework",
+    period: "Academic project",
+    description:
+      "Built a small conveyor control system in ladder and structured-text logic, covering sensor inputs, actuator outputs, safety interlocks and fault handling in a simulated control panel.",
+    tags: ["PLC", "Ladder logic", "HMI", "Industrial control"],
+    sample: true,
+  },
+  {
+    icon: Network,
+    title: "Industrial Network Lab",
+    organization: "Networking coursework",
+    period: "Academic project",
+    description:
+      "Configured a small segmented industrial network with VLANs, static and DHCP addressing, and diagnostics to study how automation devices stay reliable on the shop floor.",
+    tags: ["Cisco IOS", "VLAN", "TCP/IP", "Troubleshooting"],
+    sample: true,
+  },
+  {
+    icon: Code,
+    title: "Python Automation Utilities",
+    organization: "Personal project",
+    period: "Self-directed",
+    description:
+      "Wrote Python tools that read sensor and production data from CSV and JSON sources, then clean it, chart trends and export reports on a schedule.",
+    tags: ["Python", "Pandas", "Automation", "Data handling"],
+    sample: true,
+  },
 ];
+
+/** Real (non-sample) roles — used for the badge's experience count. */
+export const realExperienceCount = experiences.filter((item) => !item.sample).length;
 
 export interface Area {
   icon: LucideIcon;

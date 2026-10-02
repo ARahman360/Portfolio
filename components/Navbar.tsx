@@ -9,6 +9,9 @@ import { links, navLinks, profile } from "@/data/portfolio";
 /**
  * Floating glass pill navigation with scroll-spy, smooth scrolling and a
  * mobile menu — styled after the Lightswind portfolio template.
+ *
+ * Positioned `absolute` (not `fixed`) so it scrolls away with the hero; the
+ * persistent navigation lives in the floating dock at the bottom of the page.
  */
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -76,7 +79,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="fixed inset-x-0 top-4 z-50 flex flex-col items-center px-4">
+    <header className="absolute inset-x-0 top-4 z-50 flex flex-col items-center px-4">
       {/* Floating glass pill */}
       <div
         className={`glass w-full max-w-7xl rounded-[2rem] px-5 py-3 transition-shadow duration-300 sm:px-6 ${
@@ -108,8 +111,9 @@ export default function Navbar() {
             </span>
           </a>
 
-          {/* Desktop navigation */}
-          <nav aria-label="Primary" className="hidden lg:block">
+          {/* Desktop navigation — switches on at xl so the pill never
+              overflows between 1024px and 1280px */}
+          <nav aria-label="Primary" className="hidden xl:block">
             <ul className="flex space-x-4 xl:space-x-6">
               {navLinks.map((item) => {
                 const isActive = active === item.id;
@@ -139,11 +143,11 @@ export default function Navbar() {
 
           {/* Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
-            <SocialLinks className="hidden sm:flex" />
+            <SocialLinks className="hidden xl:flex" />
             <a
               href={links.cv}
               download
-              className="btn btn-ghost hidden px-5 py-2.5 text-sm md:inline-flex"
+              className="btn btn-ghost hidden px-5 py-2.5 text-sm md:inline-flex xl:hidden"
             >
               <Download size={15} aria-hidden="true" />
               Resume
@@ -155,7 +159,7 @@ export default function Navbar() {
               aria-expanded={open}
               aria-controls="mobile-menu"
               aria-label={open ? "Close menu" : "Open menu"}
-              className="grid size-10 shrink-0 place-items-center rounded-full border border-line bg-card/60 text-ink-dim transition-all duration-200 hover:border-primary/50 hover:text-primary lg:hidden"
+              className="grid size-10 shrink-0 place-items-center rounded-full border border-line bg-card/60 text-ink-dim transition-all duration-200 hover:border-primary/50 hover:text-primary xl:hidden"
             >
               {open ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
             </button>
@@ -167,7 +171,7 @@ export default function Navbar() {
       {open && (
         <div
           id="mobile-menu"
-          className="animate-menu-in glass mt-2 w-full max-w-7xl rounded-3xl p-4 shadow-xl lg:hidden"
+          className="animate-menu-in glass mt-2 w-full max-w-7xl rounded-3xl p-4 shadow-xl xl:hidden"
         >
           <nav aria-label="Mobile">
             <ul className="grid gap-1">
