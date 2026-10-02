@@ -11,7 +11,7 @@ interface SocialIconProps {
 
 function SocialIcon({ href, label, children }: SocialIconProps) {
   const baseClass =
-    "grid size-9 place-items-center rounded-lg border border-line/70 bg-surface/60 text-ink-dim transition duration-200";
+    "grid size-9 place-items-center rounded-full border border-line bg-card/60 text-ink-dim backdrop-blur-md transition duration-200";
 
   if (!href) {
     return (
@@ -32,7 +32,7 @@ function SocialIcon({ href, label, children }: SocialIconProps) {
       target={isMail ? undefined : "_blank"}
       rel={isMail ? undefined : "noreferrer noopener"}
       aria-label={label}
-      className={`${baseClass} hover:-translate-y-0.5 hover:border-brand/50 hover:text-ink`}
+      className={`${baseClass} hover:-translate-y-0.5 hover:border-primary/50 hover:text-primary`}
     >
       {children}
     </a>

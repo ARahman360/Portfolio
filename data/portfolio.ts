@@ -1,13 +1,18 @@
 import {
-  ChefHat,
+  Briefcase,
+  Building2,
   Code,
   Coffee,
   Cpu,
+  Database,
+  GraduationCap,
+  House,
+  Mail,
   Network,
   ShieldCheck,
   Sparkles,
-  Store,
   Terminal,
+  User,
   Workflow,
   type LucideIcon,
 } from "lucide-react";
@@ -22,8 +27,8 @@ export const links = {
   linkedin: "PLACEHOLDER",
   email: "PLACEHOLDER",
   cv: "/Md_Abdur_Rahman_CV.pdf",
-  // Replace with your real domain before going live (used for Open Graph URLs).
-  siteUrl: "https://example.com",
+  // Real domain — used for Open Graph / canonical URLs in app/layout.tsx.
+  siteUrl: "https://mdabdurrahman.vercel.app",
 };
 
 export const profile = {
@@ -34,6 +39,10 @@ export const profile = {
   university: "LAB University of Applied Sciences",
   degree: "Industrial Information Technology",
   location: "Finland",
+  /** Short field label used on the hero ID badge. */
+  specialty: "Industrial IT & Automation",
+  /** Decorative badge serial printed at the bottom of the hero ID card. */
+  badgeId: "LAB-IIT-2026",
   heroDescription:
     "I am an Industrial Information Technology student at LAB University of Applied Sciences in Finland. I am interested in software development, industrial automation, PLC systems, networking and modern digital technologies.",
   about: [
@@ -60,16 +69,18 @@ export const linkedinHref: string | null = isPlaceholder(links.linkedin)
 export interface NavLink {
   id: string;
   label: string;
+  /** Icon used by the floating dock navigation. */
+  icon: LucideIcon;
 }
 
 export const navLinks: NavLink[] = [
-  { id: "home", label: "Home" },
-  { id: "about", label: "About" },
-  { id: "skills", label: "Skills" },
-  { id: "projects", label: "Projects" },
-  { id: "education", label: "Education" },
-  { id: "experience", label: "Experience" },
-  { id: "contact", label: "Contact" },
+  { id: "home", label: "Home", icon: House },
+  { id: "about", label: "About", icon: User },
+  { id: "skills", label: "Skills", icon: Code },
+  { id: "projects", label: "Projects", icon: Briefcase },
+  { id: "education", label: "Education", icon: GraduationCap },
+  { id: "experience", label: "Experience", icon: Building2 },
+  { id: "contact", label: "Contact", icon: Mail },
 ];
 
 export interface Tag {
@@ -117,23 +128,112 @@ export const education: EducationEntry[] = [
 export interface ExperienceEntry {
   icon: LucideIcon;
   title: string;
+  /** Employer / project context shown under the title. */
+  organization?: string;
+  /** Short period label shown above the title. */
+  period?: string;
   description: string;
+  /** Small technology chips shown under the description. */
+  tags?: string[];
+  /**
+   * Marks placeholder content that is not a real role. Sample entries are
+   * badged "Sample" in the UI — replace or delete them once you have
+   * real project or internship experience to show.
+   */
+  sample?: boolean;
 }
 
 export const experiences: ExperienceEntry[] = [
   {
-    icon: ChefHat,
-    title: "Kitchen Work",
+    icon: Workflow,
+    title: "PLC Programming Course Project",
+    organization: "Industrial automation coursework",
+    period: "Academic project",
     description:
-      "Worked in a fast-paced kitchen environment where teamwork, hygiene, cleanliness and time management were important. The experience helped me develop responsibility, efficiency and teamwork skills.",
+      "Built a small conveyor control system in ladder and structured-text logic, covering sensor inputs, actuator outputs, safety interlocks and fault handling in a simulated control panel.",
+    tags: ["PLC", "Ladder logic", "HMI", "Industrial control"],
+    sample: true,
   },
   {
-    icon: Store,
-    title: "Supermarket Experience",
+    icon: Network,
+    title: "Industrial Network Lab",
+    organization: "Networking coursework",
+    period: "Academic project",
     description:
-      "Worked in a retail environment and gained experience in organization, cleanliness, customer service and working efficiently in a busy workplace.",
+      "Configured a small segmented industrial network with VLANs, static and DHCP addressing, and diagnostics to study how automation devices stay reliable on the shop floor.",
+    tags: ["Cisco IOS", "VLAN", "TCP/IP", "Troubleshooting"],
+    sample: true,
+  },
+  {
+    icon: Code,
+    title: "Python Automation Utilities",
+    organization: "Personal project",
+    period: "Self-directed",
+    description:
+      "Wrote Python tools that read sensor and production data from CSV and JSON sources, then clean it, chart trends and export reports on a schedule.",
+    tags: ["Python", "Pandas", "Automation", "Data handling"],
+    sample: true,
+  },
+  {
+    icon: Cpu,
+    title: "IoT Sensor Monitoring Dashboard",
+    organization: "Personal project",
+    period: "Self-directed",
+    description:
+      "Streamed temperature and vibration readings from simulated sensors into a live web dashboard, with threshold alerts when a machine drifted outside its safe operating range.",
+    tags: ["MQTT", "ESP32", "Node.js", "Dashboards"],
+    sample: true,
+  },
+  {
+    icon: ShieldCheck,
+    title: "Network Security Fundamentals",
+    organization: "Cybersecurity coursework",
+    period: "Academic project",
+    description:
+      "Studied and applied the basics of securing a small network: firewall rules, VPN access, password policies and basic traffic analysis to spot suspicious behaviour.",
+    tags: ["Firewalls", "VPN", "Packet analysis", "Access control"],
+    sample: true,
+  },
+  {
+    icon: Database,
+    title: "Relational Database Design",
+    organization: "Software development coursework",
+    period: "Academic project",
+    description:
+      "Designed and queried a normalised relational database for production records, writing joins, aggregate reports and the schema behind a small inventory application.",
+    tags: ["SQL", "PostgreSQL", "Schema design", "Reporting"],
+    sample: true,
+  },
+  {
+    icon: Terminal,
+    title: "Linux Systems Practice",
+    organization: "Operating systems coursework",
+    period: "Academic project",
+    description:
+      "Worked through command-line fundamentals on Linux: file permissions, process and service management, shell scripting and log inspection for everyday system administration tasks.",
+    tags: ["Linux", "Bash", "Permissions", "System admin"],
+    sample: true,
+  },
+  {
+    icon: Coffee,
+    title: "Java Application Exercises",
+    organization: "Programming coursework",
+    period: "Academic project",
+    description:
+      "Built console and object-oriented Java exercises covering classes, collections, file handling and exception handling, which built the base for my later automation work.",
+    tags: ["Java", "OOP", "Collections", "File I/O"],
+    sample: true,
   },
 ];
+
+/** Real (non-sample) roles — used for the badge's experience count. */
+export const realExperienceCount = experiences.filter((item) => !item.sample).length;
+
+/** Short badge summary: real roles if any, otherwise the project count. */
+export const experienceSummary =
+  realExperienceCount > 0
+    ? `${realExperienceCount} work roles`
+    : `${experiences.length} projects`;
 
 export interface Area {
   icon: LucideIcon;

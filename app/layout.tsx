@@ -1,14 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import { Geist, JetBrains_Mono } from "next/font/google";
 import type { ReactNode } from "react";
+import CursorFollower from "@/components/CursorFollower";
+import DockNav from "@/components/DockNav";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { links, profile } from "@/data/portfolio";
 import "./globals.css";
 
-/* Fonts are self-hosted by next/font (no layout shift, no external requests) */
-const inter = Inter({ subsets: ["latin"], variable: "--font-body", display: "swap" });
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-heading", display: "swap" });
+/* Fonts are self-hosted by next/font (no layout shift, no external requests).
+   The Lightswind template is built entirely on Geist; JetBrains Mono is kept
+   for the small technical labels (kickers, meta rows, tags). */
+const geist = Geist({ subsets: ["latin"], variable: "--font-body", display: "swap" });
+const geistDisplay = Geist({ subsets: ["latin"], variable: "--font-heading", display: "swap" });
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono-face",
@@ -60,16 +64,27 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#04070e",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
+  ],
 };
+
+/* Applies the saved theme before paint so there is no flash of the wrong theme.
+   Default is light; the toggle stores "dark" | "light" in localStorage. */
+const themeInit = `try{var t=localStorage.getItem("theme");if(t==="dark"){document.documentElement.classList.add("dark")}}catch(e){}`;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
+      className={`${geist.variable} ${geistDisplay.variable} ${jetbrainsMono.variable}`}
     >
-      <body className="min-h-screen bg-night text-ink">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+      </head>
+      <body className="min-h-screen bg-bg text-ink">
         <script
           dangerouslySetInnerHTML={{
             __html:
@@ -79,9 +94,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <a href="#main" className="skip-link">
           Skip to main content
         </a>
+        <CursorFollower />
         <Navbar />
         {children}
         <Footer />
+        <DockNav />
       </body>
     </html>
   );

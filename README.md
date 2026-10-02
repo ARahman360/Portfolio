@@ -1,8 +1,10 @@
 # Md Abdur Rahman — Portfolio
 
-A premium dark-tech personal portfolio website for **Md Abdur Rahman**, Industrial Information Technology student at **LAB University of Applied Sciences**, Finland.
+A modern, template-inspired personal portfolio website for **Md Abdur Rahman**, Industrial Information Technology student at **LAB University of Applied Sciences**, Finland.
 
-The site is a single-page portfolio with a hero, about, skills, featured projects, areas of exploration, education, experience and a contact section — plus a sticky navigation bar, scroll-reveal animations and a fully responsive mobile layout.
+The design follows the [Lightswind portfolio01](https://lightswind.com/templates/portfolio01) look: a floating glass pill navigation, a giant gradient hero name, a tiltable glass profile card, opposing tech-marquee rows, a big-number stats band and a rounded glass footer — on a light theme with a **light/dark toggle** (light is the default, the choice is persisted in `localStorage`).
+
+Sections: hero, skills marquee, stats, about, skills, areas of exploration, featured projects, education, experience and a contact section — plus scroll-reveal animations and a fully responsive mobile layout. A glowing custom cursor is enabled automatically on fine-pointer devices (and disabled for `prefers-reduced-motion`).
 
 ## Tech stack
 
@@ -10,8 +12,8 @@ The site is a single-page portfolio with a hero, about, skills, featured project
 - [TypeScript](https://www.typescriptlang.org/)
 - [Tailwind CSS v4](https://tailwindcss.com/)
 - [Lucide React](https://lucide.dev/) for icons
-- Self-hosted Google Fonts (Inter, Space Grotesk, JetBrains Mono) via `next/font`
-- No other runtime dependencies — the contact form is client-side only for now
+- Self-hosted Google Fonts (Geist, JetBrains Mono) via `next/font`
+- [@formspree/react](https://github.com/formspree/formspree-js/tree/master/packages/formspree-react) — contact form delivery via Formspree
 
 ## Getting started
 
@@ -43,12 +45,19 @@ app/
   globals.css       # Design tokens (colors, fonts) and component classes
   icon.svg          # AR. favicon
 components/
-  Navbar.tsx        # Sticky nav, scroll-spy, mobile menu
+  Navbar.tsx        # Floating glass pill nav, scroll-spy, mobile menu
+  DockNav.tsx       # Floating icon dock with hover tooltips (desktop)
+  ThemeToggle.tsx   # Light/dark switch (persisted)
   Hero.tsx          # Hero section
-  ProfileVisual.tsx # Portrait / AR monogram visual
+  ProfileVisual.tsx # Tiltable lanyard ID badge (portrait / AR monogram)
+  TechMarquee.tsx   # Opposing skill-pill marquee rows
+  StatsBand.tsx     # Big-number stats (derived from the data files)
+  CursorFollower.tsx# Glowing cursor dot (fine pointers only)
   About.tsx  Skills.tsx  Exploring.tsx
   Projects.tsx  ProjectCard.tsx
-  Education.tsx  Experience.tsx  Contact.tsx
+  Education.tsx
+  Experience.tsx    # "Career Journey" timeline with glowing rail
+  Contact.tsx
   Footer.tsx  SectionHeading.tsx  Reveal.tsx
   SocialLinks.tsx  BrandIcons.tsx
 data/
@@ -86,7 +95,7 @@ export const links = {
   linkedin: "PLACEHOLDER",      // ← replace with your real LinkedIn URL
   email: "PLACEHOLDER",         // ← replace with your real email address
   cv: "/Md_Abdur_Rahman_CV.pdf",
-  siteUrl: "https://example.com", // ← your real domain (used for Open Graph tags)
+  siteUrl: "https://mdabdurrahman.vercel.app", // ← real domain (used for Open Graph tags)
 };
 ```
 
@@ -134,17 +143,22 @@ Edit **`data/projects.ts`**:
   clearly disabled instead of linking nowhere.
 - The first project marked `featured: true` (or the first entry) is shown as the big card.
 
-### 5. Connect the contact form (optional)
+### 5. Contact form (Formspree)
 
-The form validates input client-side and shows an honest demo state. To actually receive
-messages, sign up at [Formspree](https://formspree.io) (or use Resend), then paste your form
-URL into `FORM_ENDPOINT` at the top of `components/Contact.tsx`:
+The contact form is connected to Formspree through `@formspree/react`:
 
-```ts
-const FORM_ENDPOINT = "https://formspree.io/f/xxxxxxx";
-```
+- Form id `xnpnyevl` → endpoint `https://formspree.io/f/xnpnyevl`, configured at the top of
+  `components/Contact.tsx` (`FORMSPREE_FORM_ID` / `FORM_ENDPOINT`).
+- Input is validated client-side first; any errors Formspree returns are shown inline through
+  `<ValidationError>` in the same styled slots.
+- Messages are delivered to the email address registered on your Formspree account (Formspree
+  uses the `email` field as the reply-to address).
+- To use a different form, create one at [formspree.io](https://formspree.io) and change
+  `FORMSPREE_FORM_ID` — the endpoint is derived from it.
 
-That's the only change needed — the submit handler already POSTs to it.
+> **Note:** a brand-new Formspree form is *inactive* until you click the confirmation link in
+> the email Formspree sends you. Until confirmed, submissions return an error (the form shows
+> it inline).
 
 ---
 
