@@ -2,17 +2,20 @@
 
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { MousePointer2 } from "lucide-react";
 import { profile } from "@/data/portfolio";
-import { careerSummary } from "@/data/career";
 
-/* Decorative barcode bars — deterministic so server and client render alike. */
+/* Decorative barcode bars — deterministic so server and client render alike.
+   Purely graphic: it encodes nothing and carries no number or ID. */
 const BAR_WIDTHS = [2, 1, 3, 1, 2, 4, 1, 1, 3, 2, 1, 4, 2, 1, 3, 1, 2, 2, 4, 1] as const;
 
 /**
  * Hero visual: a lanyard ID badge that hangs from a strap and sways gently
  * (Lightswind template signature). It also tilts toward the cursor.
  * Shows /public/profile.jpg when it exists, otherwise a gradient monogram.
+ *
+ * The card states who the person is and what they are studying. It carries no
+ * student number, employee number, graduation year or certification — those
+ * would be invented, so they are deliberately absent.
  */
 export default function ProfileVisual() {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -74,7 +77,7 @@ export default function ProfileVisual() {
         <div className="absolute inset-x-0 top-[4.25rem] flex justify-center">
           <div className="relative size-[6.5rem] rounded-full bg-gradient-to-br from-violet-400 via-sky-300 to-emerald-300 p-[3px] shadow-xl">
             <div className="relative size-full overflow-hidden rounded-full bg-card">
-              {/* Monogram fallback — visible until a real portrait loads */}
+              {/* Monogram fallback — used whenever no portrait is present */}
               <span className="absolute inset-0 grid place-items-center text-2xl font-extrabold tracking-tight text-ink">
                 {profile.monogram}
               </span>
@@ -82,7 +85,7 @@ export default function ProfileVisual() {
               {photoOk && (
                 <Image
                   src="/profile.jpg"
-                  alt="Portrait of Md Abdur Rahman"
+                  alt={profile.name}
                   fill
                   sizes="104px"
                   className={`object-cover object-top transition-opacity duration-500 ${
@@ -93,7 +96,7 @@ export default function ProfileVisual() {
                 />
               )}
 
-              {/* Online status dot */}
+              {/* Avatar affordance dot */}
               <span className="absolute right-0.5 bottom-0.5 size-3.5 rounded-full border-2 border-card bg-success" />
             </div>
           </div>
@@ -120,49 +123,54 @@ export default function ProfileVisual() {
                 strokeLinecap="round"
               />
             </svg>
-            <sup className="ml-0.5 align-super text-[9px] font-bold text-ink-faint">®</sup>
           </h2>
 
+          {/* Student title — the pill carries the status of being a student */}
           <p className="mx-auto mt-2.5 inline-block rounded-full border border-line-strong bg-bg-soft px-3 py-0.5 text-[10px] font-semibold text-ink">
             {profile.headline}
+          </p>
+
+          {/* University — secondary, quieter than the name */}
+          <p className="mx-auto mt-2 max-w-[17rem] text-[11px] leading-snug text-ink-dim">
+            {profile.university}
           </p>
 
           <div className="mt-3.5 border-t border-line pt-3.5">
             {/* Meta grid */}
             <dl className="grid grid-cols-2 gap-x-3 gap-y-2.5 rounded-xl border border-line bg-bg-soft/60 p-3 text-left">
-              <div>
+              <div className="min-w-0">
                 <dt className="font-mono text-[8px] tracking-[0.18em] text-ink-faint uppercase">
                   Specialty
                 </dt>
                 <dd className="mt-0.5 text-[12px] leading-snug font-bold">{profile.specialty}</dd>
               </div>
-              <div>
+              <div className="min-w-0">
                 <dt className="font-mono text-[8px] tracking-[0.18em] text-ink-faint uppercase">
                   Location
                 </dt>
                 <dd className="mt-0.5 text-[12px] leading-snug font-bold">{profile.location}</dd>
               </div>
-              <div>
+              <div className="col-span-2 min-w-0">
                 <dt className="font-mono text-[8px] tracking-[0.18em] text-ink-faint uppercase">
-                  Focus
+                  Current Focus
                 </dt>
-                <dd className="mt-0.5 text-[12px] leading-snug font-bold">{careerSummary}</dd>
+                <dd className="mt-0.5 text-[12px] leading-snug font-bold">{profile.currentFocus}</dd>
               </div>
-              <div>
+              <div className="col-span-2 min-w-0">
                 <dt className="font-mono text-[8px] tracking-[0.18em] text-ink-faint uppercase">
                   Status
                 </dt>
                 <dd className="mt-0.5 flex items-center gap-1.5 text-[12px] leading-snug font-bold">
-                  <span className="size-1.5 rounded-full bg-success" aria-hidden="true" />
-                  Active
+                  <span className="size-1.5 shrink-0 rounded-full bg-success" aria-hidden="true" />
+                  {profile.availability}
                 </dd>
               </div>
             </dl>
           </div>
 
-          {/* Barcode */}
-          <div className="mt-3 rounded-lg border border-line bg-bg-soft px-3 py-2.5">
-            <div className="flex h-8 items-end justify-center gap-[3px]" aria-hidden="true">
+          {/* Decorative barcode — graphic texture only, encodes nothing */}
+          <div className="mt-3.5 px-1" aria-hidden="true">
+            <div className="flex h-7 items-end justify-center gap-[3px] opacity-40">
               {BAR_WIDTHS.map((width, index) => (
                 <span
                   key={`${width}-${index}`}
@@ -173,17 +181,11 @@ export default function ProfileVisual() {
             </div>
           </div>
 
-          {/* Badge serial row */}
-          <div className="mt-2.5 flex items-center justify-between gap-3 font-mono text-[9px] tracking-[0.14em] uppercase">
-            <span className="font-bold text-ink">{profile.badgeId}</span>
-            <span className="text-ink-faint">Industrial IT</span>
+          {/* Bottom identifier — real institution and field, no ID numbers */}
+          <div className="mt-2.5 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 font-mono text-[8px] tracking-[0.14em] uppercase">
+            <span className="font-bold text-ink">{profile.badgeFooter}</span>
+            <span className="shrink-0 text-ink-faint">Industrial IT</span>
           </div>
-
-          {/* Interaction hint */}
-          <p className="mt-3 flex items-center justify-center gap-1.5 font-mono text-[8px] tracking-[0.25em] text-ink-faint uppercase">
-            <MousePointer2 size={10} aria-hidden="true" />
-            Move the cursor over the card
-          </p>
         </div>
       </div>
     </div>

@@ -38,10 +38,14 @@ export const profile = {
   university: "LAB University of Applied Sciences",
   degree: "Industrial Information Technology",
   location: "Finland",
-  /** Short field label used on the hero ID badge. */
-  specialty: "Industrial IT & Automation",
-  /** Decorative badge serial printed at the bottom of the hero ID card. */
-  badgeId: "LAB-IIT-2026",
+  /** Field of study, shown as SPECIALTY on the hero ID badge. */
+  specialty: "Industrial Information Technology",
+  /** Areas currently being developed — shown as CURRENT FOCUS on the badge. */
+  currentFocus: "Automation • PLC • Networking",
+  /** Student availability. This is not an employment status. */
+  availability: "Open to Opportunities",
+  /** Left-hand text on the badge's bottom identifier row. */
+  badgeFooter: "LAB University of Applied Sciences",
   heroDescription:
     "I am an Industrial Information Technology student at LAB University of Applied Sciences in Finland. I am interested in software development, industrial automation, PLC systems, networking and modern digital technologies.",
   about: [
