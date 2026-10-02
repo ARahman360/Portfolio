@@ -438,6 +438,9 @@ html.has-custom-cursor .cursor-follower {
   will-change: transform;
   color: var(--color-primary);
   filter: drop-shadow(0 0 8px rgb(139 92 246 / 0.9));
+  /* Scale grows from the arrow tip (top-left), so the hotspot never drifts
+     away from the real pointer when the pointer enlarges over a link. */
+  transform-origin: 0 0;
   transition: scale 0.18s ease;
 }
 

@@ -21,51 +21,61 @@ export default function CursorFollower() {
     const root = document.documentElement;
     root.classList.add("has-custom-cursor");
 
-    let targetX = -100;
-    let targetY = -100;
-    let x = -100;
-    let y = -100;
-    let frame = 0;
+    /* The follower is parked off-screen until the first pointer event. */
+    const OFFSCREEN = -200;
+    let lastX = OFFSCREEN;
+    let lastY = OFFSCREEN;
+    let seen = false;
 
-    const render = () => {
-      x += (targetX - x) * 0.25;
-      y += (targetY - y) * 0.25;
-      element.style.transform = `translate(${x}px, ${y}px)`;
-      frame = requestAnimationFrame(render);
-    };
-
+    /*
+     * Position is written straight from the pointer event — no easing loop.
+     * Any lerp/smoothing makes the arrow visibly trail the real cursor, which
+     * is worst exactly where it matters: crossing a large card or heading.
+     */
     const onMove = (event: MouseEvent) => {
-      targetX = event.clientX;
-      targetY = event.clientY;
+      lastX = event.clientX;
+      lastY = event.clientY;
+      if (!seen) {
+        seen = true;
+        element.style.transition = "none";
+      }
+      element.style.transform = `translate3d(${lastX}px, ${lastY}px, 0)`;
+
       const target = event.target as HTMLElement | null;
       const interactive = target?.closest("a, button, input, textarea, select, [role='button']");
       element.classList.toggle("is-active", Boolean(interactive));
     };
 
-    /* Hide the follower once the pointer leaves the viewport */
+    /* Park the follower once the pointer leaves the viewport */
     const onLeave = () => {
-      targetX = -100;
-      targetY = -100;
+      element.style.transform = `translate3d(${OFFSCREEN}px, ${OFFSCREEN}px, 0)`;
+      element.classList.remove("is-active");
+    };
+
+    /* Park it on entry too, so it never shows at the last known spot */
+    const onEnter = () => {
+      if (!seen) onLeave();
     };
 
     window.addEventListener("mousemove", onMove, { passive: true });
     document.addEventListener("mouseleave", onLeave);
-    frame = requestAnimationFrame(render);
+    document.addEventListener("mouseenter", onEnter);
 
     return () => {
-      cancelAnimationFrame(frame);
       window.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseleave", onLeave);
+      document.removeEventListener("mouseenter", onEnter);
       root.classList.remove("has-custom-cursor");
     };
   }, []);
 
   return (
     <div ref={followerRef} className="cursor-follower" aria-hidden="true">
-      {/* Classic arrow pointer with its tip at the element origin (0,0) */}
+      {/* Classic arrow pointer. The tip sits at (0,0) so the hotspot lands
+          exactly under the real pointer position. */}
       <svg width="20" height="22" viewBox="0 0 20 22" fill="none">
         <path
-          d="M1 1 L1 17.6 L5.4 13.4 L8.3 20.4 L11.7 18.9 L8.8 12.2 L14.9 11.7 Z"
+          d="M0 0 L0 16.6 L4.4 12.4 L7.3 19.4 L10.7 17.9 L7.8 11.2 L13.9 10.7 Z"
           fill="currentColor"
           stroke="rgba(255,255,255,0.9)"
           strokeWidth="1"
