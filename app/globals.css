@@ -41,9 +41,9 @@
   --orb-b: rgb(56 189 248 / 0.26); /* sky glow */
   --dot-grid: rgb(0 0 0 / 0.1);
   --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04);
-  /* Custom cursor — moon on the light background, with a cool silver-blue glow */
+  /* Custom cursor — sun on the light background, with a warm amber glow */
   --cursor-dot: #0a0a0a;
-  --cursor-glow: rgb(125 178 250 / 0.8);
+  --cursor-glow: rgb(251 191 36 / 0.85);
   color-scheme: light;
 }
 
@@ -68,9 +68,9 @@
   --orb-b: rgb(14 165 233 / 0.2);
   --dot-grid: rgb(255 255 255 / 0.1);
   --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4);
-  /* Custom cursor — sun on the dark background, with a warm amber glow */
+  /* Custom cursor — moon on the dark background, with a cool silver-blue glow */
   --cursor-dot: #fafafa;
-  --cursor-glow: rgb(251 191 36 / 0.85);
+  --cursor-glow: rgb(125 178 250 / 0.8);
   color-scheme: dark;
 }
 
@@ -475,31 +475,35 @@ html.has-custom-cursor .cursor-follower {
   overflow: visible;
 }
 
-/* Only one icon is ever visible; `.dark` selects the sun. Both rules are
+/* Only one icon is ever visible; `.dark` selects the moon. Both rules are
    needed because preflight sets `svg { display: block }`. */
-.cursor-sun {
+.cursor-moon {
   display: none;
 }
 
-.dark .cursor-sun {
+.cursor-sun {
   display: block;
 }
 
-.dark .cursor-moon {
+.dark .cursor-sun {
   display: none;
 }
 
-/* Moon glow (light mode) — layered tightly so it reads on a white page */
-html.has-custom-cursor .cursor-moon {
-  filter: drop-shadow(0 0 1.5px rgb(96 165 250 / 0.9))
-    drop-shadow(0 0 5px rgb(59 130 246 / 0.75))
-    drop-shadow(0 0 12px rgb(37 99 235 / 0.5));
+.dark .cursor-moon {
+  display: block;
 }
 
-/* Sun glow (dark mode) */
-.dark .cursor-sun {
-  filter: drop-shadow(0 0 3px rgb(253 224 71 / 0.95))
-    drop-shadow(0 0 10px rgb(249 115 22 / 0.65));
+/* Sun glow (light mode) — layered tightly so it reads on a white page */
+html.has-custom-cursor .cursor-sun {
+  filter: drop-shadow(0 0 1.5px rgb(253 224 71 / 0.95))
+    drop-shadow(0 0 5px rgb(249 115 22 / 0.7))
+    drop-shadow(0 0 12px rgb(234 88 12 / 0.45));
+}
+
+/* Moon glow (dark mode) */
+.dark .cursor-moon {
+  filter: drop-shadow(0 0 3px rgb(191 219 254 / 0.9))
+    drop-shadow(0 0 10px rgb(96 165 250 / 0.6));
 }
 
 /* Rays turn slowly, like a real sun */
@@ -520,15 +524,15 @@ html.has-custom-cursor .cursor-follower.is-active .cursor-icon {
   transform: translate(-50%, -50%) scale(1.25);
 }
 
-html.has-custom-cursor .cursor-follower.is-active .cursor-moon {
-  filter: drop-shadow(0 0 2px rgb(96 165 250 / 1))
-    drop-shadow(0 0 8px rgb(59 130 246 / 0.85))
-    drop-shadow(0 0 18px rgb(37 99 235 / 0.6));
+html.has-custom-cursor .cursor-follower.is-active .cursor-sun {
+  filter: drop-shadow(0 0 2px rgb(253 224 71 / 1))
+    drop-shadow(0 0 8px rgb(249 115 22 / 0.85))
+    drop-shadow(0 0 18px rgb(234 88 12 / 0.55));
 }
 
-.dark .cursor-follower.is-active .cursor-sun {
-  filter: drop-shadow(0 0 5px rgb(253 224 71 / 1))
-    drop-shadow(0 0 16px rgb(249 115 22 / 0.85));
+.dark .cursor-follower.is-active .cursor-moon {
+  filter: drop-shadow(0 0 5px rgb(191 219 254 / 0.95))
+    drop-shadow(0 0 16px rgb(96 165 250 / 0.8));
 }
 
 /* Soft outer bloom that pulses outward behind the icon */

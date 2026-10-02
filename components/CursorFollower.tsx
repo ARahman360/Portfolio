@@ -31,7 +31,7 @@ const MARIA = [
 ] as const;
 
 /**
- * Theme cursor: a cratered crescent moon in light mode, a radiant sun in dark
+ * Theme cursor: a radiant sun in light mode, a cratered full moon in dark
  * mode. Both are centred exactly on the pointer — the wrapper's (0,0) origin
  * is the pointer position and the icon centres itself on that origin, so the
  * glow can never read as the pointer being "somewhere else".
@@ -97,7 +97,7 @@ export default function CursorFollower() {
       <span className="cursor-halo" />
 
       <span className="cursor-icon">
-        {/* ---- Full moon (light mode) ---- */}
+        {/* ---- Full moon (dark mode) ---- */}
         <svg className="cursor-moon" viewBox="0 0 32 32" width="26" height="26" fill="none">
           <defs>
             {/* Sphere shading: lit upper-left, shadowed lower-right limb */}
@@ -151,7 +151,7 @@ export default function CursorFollower() {
           <circle cx="16" cy="16" r="12.6" stroke="#475569" strokeOpacity="0.4" strokeWidth="0.7" />
         </svg>
 
-        {/* ---- Radiant sun (dark mode) ---- */}
+        {/* ---- Radiant sun (light mode) ---- */}
         <svg className="cursor-sun" viewBox="0 0 32 32" width="26" height="26" fill="none">
           <defs>
             <radialGradient id="cursorSunCore" cx="50%" cy="50%" r="50%">
