@@ -23,8 +23,8 @@ import {
 ------------------------------------------------------------------ */
 export const links = {
   github: "https://github.com/ARahman360",
-  linkedin: "PLACEHOLDER",
-  email: "PLACEHOLDER",
+  linkedin: "https://www.linkedin.com/in/md-abdur-rahman-6b1954440",
+  email: "mdabdurrahman02.fi@gmail.com",
   cv: "/Md_Abdur_Rahman_CV.pdf",
   // Real domain — used for Open Graph / canonical URLs in app/layout.tsx.
   siteUrl: "https://mdabdurrahman.vercel.app",

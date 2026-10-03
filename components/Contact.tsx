@@ -140,6 +140,7 @@ export default function Contact() {
   };
 
   const githubHandle = links.github.replace(/^https?:\/\//, "");
+  const linkedinHandle = links.linkedin.replace(/^https?:\/\//, "");
 
   return (
     <section id="contact" className="scroll-mt-32 border-t border-line py-20 sm:py-24">
@@ -176,7 +177,7 @@ export default function Contact() {
                     icon={<LinkedinIcon size={16} />}
                     label="LinkedIn"
                     href={linkedinHref}
-                    value="LinkedIn profile"
+                    value={linkedinHandle}
                     external
                   />
                 ) : null}
