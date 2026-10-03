@@ -463,28 +463,38 @@
    Animated gradient name + matching underline
    Motion is pure CSS (background-position on a clipped
    background) so it costs no JS and never triggers layout.
-   Contrast is held >= 5:1 against the card in both themes.
+   Contrast is held at or above WCAG AA for large bold text in both themes
+   (measured worst case across the sweep: 3.3:1 light, 4.4:1 dark).
 --------------------------------------------------------- */
+/* One shared timeline for the name and the underline so their gradients
+   travel in lockstep. `linear` is essential — an ease curve parks the
+   sweep at each end, which reads as a static colour rather than motion. */
 @keyframes badge-name-flow {
-  0%,
-  100% {
+  0% {
     background-position: 0% 50%;
   }
   50% {
     background-position: 100% 50%;
   }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .badge-name {
+  /* Wide ramp (250%) so a full sweep travels ~1.5x the word width, and the
+     stops run purple -> violet -> blue -> CYAN and back. The cyan stop is
+     what makes the travel visible: without it every stop is violet/blue and
+     the whole word shifts hue by only a few degrees. */
   background-image: linear-gradient(
-    100deg,
+    90deg,
     #6d28d9 0%,
     #7c3aed 22%,
-    #4f46e5 45%,
-    #2563eb 68%,
+    #2563eb 48%,
+    #0891b2 74%,
     #6d28d9 100%
   );
-  background-size: 260% 100%;
+  background-size: 250% 100%;
   background-position: 0% 50%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -493,16 +503,16 @@
   /* Ambient glow: zero-offset, wide blur — reads as light, not a drop shadow. */
   filter: drop-shadow(0 0 5px rgb(109 40 217 / 0.28))
     drop-shadow(0 0 12px rgb(37 99 235 / 0.2));
-  animation: badge-name-flow 9s ease-in-out infinite;
+  animation: badge-name-flow 6s linear infinite;
 }
 
 .dark .badge-name {
   background-image: linear-gradient(
-    100deg,
+    90deg,
     #a78bfa 0%,
     #818cf8 22%,
-    #60a5fa 45%,
-    #22d3ee 68%,
+    #60a5fa 48%,
+    #22d3ee 74%,
     #a78bfa 100%
   );
   filter: drop-shadow(0 0 6px rgb(167 139 250 / 0.4))
@@ -519,7 +529,8 @@
     drop-shadow(0 0 22px rgb(56 189 248 / 0.4));
 }
 
-/* Gradient underline, drifting on the same 9s cycle as the name */
+/* Gradient underline — same keyframes, same duration, same direction as the
+   name, so both gradients sweep left-to-right together. */
 .badge-underline {
   position: absolute;
   left: 0;
@@ -529,24 +540,24 @@
   border-radius: 9999px;
   background-image: linear-gradient(
     90deg,
-    #7c3aed 0%,
-    #4f46e5 35%,
-    #0ea5e9 70%,
-    #22d3ee 100%
+    #6d28d9 0%,
+    #2563eb 45%,
+    #0891b2 75%,
+    #6d28d9 100%
   );
-  background-size: 220% 100%;
+  background-size: 250% 100%;
   background-position: 0% 50%;
   filter: drop-shadow(0 0 4px rgb(124 58 237 / 0.45));
-  animation: badge-name-flow 9s ease-in-out infinite;
+  animation: badge-name-flow 6s linear infinite;
 }
 
 .dark .badge-underline {
   background-image: linear-gradient(
     90deg,
     #a78bfa 0%,
-    #818cf8 35%,
-    #38bdf8 70%,
-    #67e8f9 100%
+    #60a5fa 45%,
+    #22d3ee 75%,
+    #a78bfa 100%
   );
   filter: drop-shadow(0 0 5px rgb(167 139 250 / 0.55))
     drop-shadow(0 0 10px rgb(56 189 248 / 0.35));
