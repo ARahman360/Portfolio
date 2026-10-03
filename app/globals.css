@@ -481,56 +481,113 @@
   }
 }
 
+/* A soft highlight that crosses several letters, then rests.
+   Deliberately slow and mostly transparent — reflected light, not a cursor. */
+@keyframes badge-name-sheen {
+  0% {
+    background-position: -160% 50%;
+  }
+  30%,
+  100% {
+    background-position: 260% 50%;
+  }
+}
+
 .badge-name {
-  /* Wide ramp (250%) so a full sweep travels ~1.5x the word width, and the
-     stops run purple -> violet -> blue -> CYAN and back. The cyan stop is
-     what makes the travel visible: without it every stop is violet/blue and
-     the whole word shifts hue by only a few degrees. */
+  /* 300% tile: a full sweep travels twice the word width, so every letter
+     passes through several hues rather than the whole word shifting at once.
+     Light-mode stops are the deeper -600/-700 variants of the brand hues;
+     #EC4899 and #06B6D4 measure 3.5:1 and 2.4:1 on white and are unreadable. */
   background-image: linear-gradient(
     90deg,
-    #6d28d9 0%,
-    #7c3aed 22%,
-    #2563eb 48%,
-    #0891b2 74%,
-    #6d28d9 100%
+    #7c3aed 0%,
+    #db2777 20%,
+    #9333ea 42%,
+    #0e7490 64%,
+    #2563eb 82%,
+    #7c3aed 100%
   );
-  background-size: 250% 100%;
+  background-size: 300% 100%;
   background-position: 0% 50%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  /* Ambient glow: zero-offset, wide blur — reads as light, not a drop shadow. */
-  filter: drop-shadow(0 0 5px rgb(109 40 217 / 0.28))
-    drop-shadow(0 0 12px rgb(37 99 235 / 0.2));
-  animation: badge-name-flow 6s linear infinite;
+  /* Three stacked glows — tight violet core, mid magenta, wide cyan halo.
+     All zero-offset so they read as ambient light and never soften the glyph
+     edges the way an offset text-shadow would. */
+  filter: drop-shadow(0 0 4px rgb(124 58 237 / 0.55))
+    drop-shadow(0 0 10px rgb(236 72 153 / 0.35))
+    drop-shadow(0 0 18px rgb(6 182 212 / 0.22));
+  animation: badge-name-flow 4.2s linear infinite;
 }
 
 .dark .badge-name {
   background-image: linear-gradient(
     90deg,
     #a78bfa 0%,
-    #818cf8 22%,
-    #60a5fa 48%,
-    #22d3ee 74%,
+    #f472b6 20%,
+    #c084fc 42%,
+    #22d3ee 64%,
+    #60a5fa 82%,
     #a78bfa 100%
   );
-  filter: drop-shadow(0 0 6px rgb(167 139 250 / 0.4))
-    drop-shadow(0 0 16px rgb(56 189 248 / 0.32));
+  filter: drop-shadow(0 0 5px rgb(168 85 247 / 0.75))
+    drop-shadow(0 0 12px rgb(236 72 153 / 0.5))
+    drop-shadow(0 0 22px rgb(6 182 212 / 0.38));
 }
 
 .badge-card:hover .badge-name {
-  filter: drop-shadow(0 0 7px rgb(109 40 217 / 0.34))
-    drop-shadow(0 0 16px rgb(37 99 235 / 0.24));
+  filter: drop-shadow(0 0 6px rgb(124 58 237 / 0.7))
+    drop-shadow(0 0 14px rgb(236 72 153 / 0.45))
+    drop-shadow(0 0 24px rgb(6 182 212 / 0.3));
 }
 
 .dark .badge-card:hover .badge-name {
-  filter: drop-shadow(0 0 8px rgb(167 139 250 / 0.5))
-    drop-shadow(0 0 22px rgb(56 189 248 / 0.4));
+  filter: drop-shadow(0 0 7px rgb(168 85 247 / 0.9))
+    drop-shadow(0 0 16px rgb(236 72 153 / 0.62))
+    drop-shadow(0 0 30px rgb(6 182 212 / 0.5));
 }
 
-/* Gradient underline — same keyframes, same duration, same direction as the
-   name, so both gradients sweep left-to-right together. */
+/* Sheen: a travelling highlight on a layer BEHIND the letters.
+
+   It must not paint over the glyphs. Any lightening of the letterforms
+   lowers contrast on the white card (measured 3.4:1 -> 2.1:1 with a
+   screen-blended overlay), so the highlight sits behind the name instead and
+   reads as light travelling across the surface under the text. */
+.badge-name-sheen {
+  position: absolute;
+  inset: -0.15rem -0.35rem;
+  z-index: 0;
+  border-radius: 0.5rem;
+  background-image: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgb(56 189 248 / 0.42) 45%,
+    rgb(192 132 252 / 0.46) 55%,
+    transparent 100%
+  );
+  background-size: 70% 100%;
+  background-repeat: no-repeat;
+  background-position: -160% 50%;
+  filter: blur(7px);
+  pointer-events: none;
+  animation: badge-name-sheen 7s linear infinite;
+}
+
+.dark .badge-name-sheen {
+  background-image: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgb(56 189 248 / 0.3) 45%,
+    rgb(216 180 254 / 0.34) 55%,
+    transparent 100%
+  );
+  filter: blur(9px);
+}
+
+/* Gradient underline — same keyframes, duration and direction as the name,
+   in the same violet -> magenta -> cyan -> blue family. */
 .badge-underline {
   position: absolute;
   left: 0;
@@ -540,27 +597,30 @@
   border-radius: 9999px;
   background-image: linear-gradient(
     90deg,
-    #6d28d9 0%,
-    #2563eb 45%,
-    #0891b2 75%,
-    #6d28d9 100%
+    #7c3aed 0%,
+    #db2777 30%,
+    #0e7490 60%,
+    #2563eb 80%,
+    #7c3aed 100%
   );
-  background-size: 250% 100%;
+  background-size: 300% 100%;
   background-position: 0% 50%;
-  filter: drop-shadow(0 0 4px rgb(124 58 237 / 0.45));
-  animation: badge-name-flow 6s linear infinite;
+  filter: drop-shadow(0 0 4px rgb(124 58 237 / 0.55))
+    drop-shadow(0 0 8px rgb(236 72 153 / 0.3));
+  animation: badge-name-flow 4.2s linear infinite;
 }
 
 .dark .badge-underline {
   background-image: linear-gradient(
     90deg,
     #a78bfa 0%,
-    #60a5fa 45%,
-    #22d3ee 75%,
+    #f472b6 30%,
+    #22d3ee 60%,
+    #60a5fa 80%,
     #a78bfa 100%
   );
-  filter: drop-shadow(0 0 5px rgb(167 139 250 / 0.55))
-    drop-shadow(0 0 10px rgb(56 189 248 / 0.35));
+  filter: drop-shadow(0 0 5px rgb(168 85 247 / 0.7))
+    drop-shadow(0 0 10px rgb(236 72 153 / 0.45));
 }
 
 /* A highlight crosses the bar, then rests. Most of the cycle is still. */
@@ -881,6 +941,11 @@ html.reveal-all .reveal {
   .badge-name,
   .badge-underline {
     animation: none !important;
+  }
+
+  /* The sheen would otherwise sit parked mid-word as a bright blob. */
+  .badge-name-sheen {
+    display: none !important;
   }
 
   /* The travelling highlight would otherwise sit parked mid-bar. */

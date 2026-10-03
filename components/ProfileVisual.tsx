@@ -107,8 +107,11 @@ export default function ProfileVisual() {
             portrait can never overlap the name. */}
         <div className="badge-identity px-5 pb-4 text-center">
           <h2 className="relative inline-block text-[1.35rem] font-extrabold tracking-tight">
+            {/* Travelling highlight sits BEHIND the letters so it adds light
+                without lightening the glyphs (which would hurt contrast). */}
+            <span className="badge-name-sheen" aria-hidden="true" />
             {/* Animated gradient text (CSS-driven, theme-aware, reduced-motion safe) */}
-            <span className="badge-name">{profile.name}</span>
+            <span className="badge-name relative z-10">{profile.name}</span>
             <span className="badge-underline" aria-hidden="true" />
           </h2>
 
