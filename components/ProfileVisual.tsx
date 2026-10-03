@@ -59,7 +59,7 @@ export default function ProfileVisual() {
       {/* Badge */}
       <div
         ref={cardRef}
-        className="relative -mt-1.5 w-full rounded-[1.5rem] border border-line bg-card shadow-[0_30px_70px_-30px_rgb(0_0_0/0.55)] transition-transform duration-200 ease-out will-change-transform"
+        className="badge-card relative -mt-1.5 w-full rounded-[1.5rem] border border-line bg-card shadow-[0_30px_70px_-30px_rgb(0_0_0/0.55)] transition-transform duration-200 ease-out will-change-transform"
       >
         {/* Gradient header — rounded top only, NO overflow-hidden here so the
             portrait below can hang outside the header. */}
@@ -71,11 +71,11 @@ export default function ProfileVisual() {
           />
         </div>
 
-        {/* Circular portrait — centred on the header's bottom edge.
-            Positioned from the top (not -bottom-*) so it stays anchored to
-            the h-36 header instead of the card's own bottom edge. */}
-        <div className="absolute inset-x-0 top-[4.25rem] flex justify-center">
-          <div className="relative size-[6.5rem] rounded-full bg-gradient-to-br from-violet-400 via-sky-300 to-emerald-300 p-[3px] shadow-xl">
+        {/* Circular portrait — hangs over the gradient header's bottom edge.
+            Diameter and vertical offset both come from --badge-portrait in
+            globals.css, so they scale together across breakpoints. */}
+        <div className="badge-portrait-wrap absolute inset-x-0 flex justify-center">
+          <div className="badge-portrait badge-portrait-ring relative rounded-full p-[3.5px]">
             <div className="relative size-full overflow-hidden rounded-full bg-card">
               {/* Monogram fallback — used whenever no portrait is present */}
               <span className="absolute inset-0 grid place-items-center text-2xl font-extrabold tracking-tight text-ink">
@@ -87,7 +87,7 @@ export default function ProfileVisual() {
                   src="/profile.png"
                   alt={profile.name}
                   fill
-                  sizes="104px"
+                  sizes="(min-width: 1024px) 152px, (min-width: 640px) 136px, 116px"
                   className={`object-cover object-top transition-opacity duration-500 ${
                     photoLoaded ? "opacity-100" : "opacity-0"
                   }`}
@@ -103,26 +103,13 @@ export default function ProfileVisual() {
         </div>
 
         {/* Identity block */}
-        {/* pt clears the portrait that hangs over the header edge
-            (header is h-28 = 7rem; portrait ends ~10.75rem down) */}
-        <div className="px-5 pt-[4.75rem] pb-4 text-center">
-          <h2 className="relative inline-block text-[1.0625rem] font-extrabold tracking-tight">
-            {profile.name}
-            {/* Hand-drawn style underline (template detail) */}
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 220 12"
-              preserveAspectRatio="none"
-              className="absolute -bottom-1.5 left-0 h-2.5 w-full text-primary/80"
-            >
-              <path
-                d="M2 8C22 2 40 2 62 5s42 4 64 1 40-7 92-3"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-              />
-            </svg>
+        {/* pt is derived from --badge-portrait in CSS so the larger
+            portrait can never overlap the name. */}
+        <div className="badge-identity px-5 pb-4 text-center">
+          <h2 className="relative inline-block text-[1.35rem] font-extrabold tracking-tight">
+            {/* Animated gradient text (CSS-driven, theme-aware, reduced-motion safe) */}
+            <span className="badge-name">{profile.name}</span>
+            <span className="badge-underline" aria-hidden="true" />
           </h2>
 
           {/* Student title — the pill carries the status of being a student */}
