@@ -11,7 +11,7 @@ const BAR_WIDTHS = [2, 1, 3, 1, 2, 4, 1, 1, 3, 2, 1, 4, 2, 1, 3, 1, 2, 2, 4, 1] 
 /**
  * Hero visual: a lanyard ID badge that hangs from a strap and sways gently
  * (Lightswind template signature). It also tilts toward the cursor.
- * Shows /public/profile.jpg when it exists, otherwise a gradient monogram.
+ * Shows /public/profile.png when it exists, otherwise a gradient monogram.
  *
  * The card states who the person is and what they are studying. It carries no
  * student number, employee number, graduation year or certification — those
@@ -84,7 +84,7 @@ export default function ProfileVisual() {
 
               {photoOk && (
                 <Image
-                  src="/profile.jpg"
+                  src="/profile.png"
                   alt={profile.name}
                   fill
                   sizes="104px"
